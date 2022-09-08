@@ -8,28 +8,28 @@ import (
 
 func Provider() *schema.Provider {
 	return &schema.Provider{
-		// Schema: map[string]*schema.Schema{
-		// 	"address": {
-		// 		Type:        schema.TypeString,
-		// 		Required:    true,
-		// 		DefaultFunc: schema.EnvDefaultFunc("SERVICE_ADDRESS", ""),
-		// 	},
-		// 	"port": {
-		// 		Type:        schema.TypeInt,
-		// 		Required:    true,
-		// 		DefaultFunc: schema.EnvDefaultFunc("SERVICE_PORT", ""),
-		// 	},
-		// 	"token": {
-		// 		Type:        schema.TypeString,
-		// 		Required:    true,
-		// 		DefaultFunc: schema.EnvDefaultFunc("SERVICE_TOKEN", ""),
-		// 	},
-		// },
+		Schema: map[string]*schema.Schema{
+			"address": {
+				Type:        schema.TypeString,
+				Required:    true,
+				DefaultFunc: schema.EnvDefaultFunc("SERVICE_ADDRESS", ""),
+			},
+			"port": {
+				Type:        schema.TypeInt,
+				Required:    true,
+				DefaultFunc: schema.EnvDefaultFunc("SERVICE_PORT", ""),
+			},
+			"token": {
+				Type:        schema.TypeString,
+				Required:    true,
+				DefaultFunc: schema.EnvDefaultFunc("SERVICE_TOKEN", ""),
+			},
+		},
 		ResourcesMap: map[string]*schema.Resource{},
 		DataSourcesMap: map[string]*schema.Resource{
 			"circle3_leases": dataSourceLeases(),
 		},
-		//ConfigureFunc: providerConfigure,
+		ConfigureFunc: providerConfigure,
 	}
 }
 
