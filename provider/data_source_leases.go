@@ -2,12 +2,10 @@ package provider
 
 import (
 	"context"
-	"crypto/tls"
-	"encoding/json"
-	"fmt"
-	"net/http"
 	"strconv"
 	"time"
+
+	circleclient "terraform-provider-circle3/client"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -46,31 +44,27 @@ func dataSourceLeases() *schema.Resource {
 }
 
 func dataSourceLeasesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	transCfg := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates
-	}
-	client := &http.Client{Timeout: 10 * time.Second, Transport: transCfg}
+	c := m.(*circleclient.Client)
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/dashboard/acpi/lease/", "https://cloud3.fured.cloud.bme.hu"), nil)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	req.Header.Set("Authorization", "token 870d52e79fef266daebd1e6f781fe2c2422fde4a")
-
-	r, err := client.Do(req)
+	reqlease, err := c.GetAllLeases()
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	defer r.Body.Close()
 	leases := make([]map[string]interface{}, 0)
-	err = json.NewDecoder(r.Body).Decode(&leases)
 
-	if err != nil {
-		return diag.FromErr(err)
+	for _, v := range reqlease {
+		ingredient := make(map[string]interface{})
+
+		ingredient["id"] = v.ID
+		ingredient["name"] = v.Name
+		ingredient["delete_interval_seconds"] = v.Delete_interval_seconds
+		ingredient["suspend_interval_seconds"] = v.Suspend_interval_seconds
+
+		leases = append(leases, ingredient)
 	}
 
 	if err := d.Set("leases", leases); err != nil {

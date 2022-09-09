@@ -2,10 +2,12 @@ package client
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
 type Client struct {
@@ -16,25 +18,28 @@ type Client struct {
 }
 
 func NewClient(hostname string, port int, token string) *Client {
+	transCfg := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates
+	}
 	return &Client{
 		hostname:   hostname,
 		port:       port,
 		authToken:  token,
-		httpClient: &http.Client{},
+		httpClient: &http.Client{Timeout: 10 * time.Second, Transport: transCfg},
 	}
 }
 
-func (c *Client) GetAllLeases() (*map[string]Lease, error) {
+func (c *Client) GetAllLeases() ([]Lease, error) {
 	body, err := c.httpRequest("dashboard/acpi/lease/", "GET", bytes.Buffer{})
 	if err != nil {
 		return nil, err
 	}
-	items := map[string]Lease{}
+	items := []Lease{}
 	err = json.NewDecoder(body).Decode(&items)
 	if err != nil {
 		return nil, err
 	}
-	return &items, nil
+	return items, nil
 }
 
 func (c *Client) httpRequest(path, method string, body bytes.Buffer) (closer io.ReadCloser, err error) {
@@ -42,7 +47,7 @@ func (c *Client) httpRequest(path, method string, body bytes.Buffer) (closer io.
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Add("Authorization", c.authToken)
+	req.Header.Add("Authorization", fmt.Sprintf("token %s", c.authToken))
 	switch method {
 	case "GET":
 	case "DELETE":

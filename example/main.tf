@@ -8,9 +8,9 @@ terraform {
 }
 
 provider circle3 {
-  address = "cloud3.fured.cloud.bme.hu"
+  address = "https://cloud3.fured.cloud.bme.hu"
   port = 443
-  token = "secret"
+  token = "870d52e79fef266daebd1e6f781fe2c2422fde4a"
 }
 
 data "circle3_leases" "all" {}
