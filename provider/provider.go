@@ -25,9 +25,12 @@ func Provider() *schema.Provider {
 				DefaultFunc: schema.EnvDefaultFunc("SERVICE_TOKEN", ""),
 			},
 		},
-		ResourcesMap: map[string]*schema.Resource{},
+		ResourcesMap: map[string]*schema.Resource{
+			"circle3_vm": resourceVM(),
+		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"circle3_leases": dataSourceLeases(),
+			"circle3_leases":       dataSourceLeases(),
+			"circle3_lease_byname": dataSourceLeasesByName(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

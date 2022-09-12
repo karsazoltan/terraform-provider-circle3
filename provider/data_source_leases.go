@@ -75,3 +75,43 @@ func dataSourceLeasesRead(ctx context.Context, d *schema.ResourceData, m interfa
 
 	return diags
 }
+
+func dataSourceLeasesByName() *schema.Resource {
+	return &schema.Resource{
+		ReadContext: dataSourceLeasesByNameRead,
+		Schema: map[string]*schema.Schema{
+			"id": &schema.Schema{
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"name": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"suspend_interval_seconds": &schema.Schema{
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"delete_interval_seconds": &schema.Schema{
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+		},
+	}
+}
+
+func dataSourceLeasesByNameRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	c := m.(*circleclient.Client)
+	var diags diag.Diagnostics
+
+	reqlease, err := c.GetLeasesByName(d.Get("name").(string))
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.SetId(strconv.Itoa(reqlease.ID))
+	d.Set("delete_interval_seconds", reqlease.Delete_interval_seconds)
+	d.Set("suspend_interval_seconds", reqlease.Suspend_interval_seconds)
+
+	return diags
+}

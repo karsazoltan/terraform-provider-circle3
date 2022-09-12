@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"strconv"
 
 	circleclient "terraform-provider-circle3/client"
 
@@ -16,77 +17,85 @@ func resourceVM() *schema.Resource {
 		UpdateContext: resourceVMUpdate,
 		DeleteContext: resourceVMDelete,
 		Schema: map[string]*schema.Schema{
-			"vms": &schema.Schema{
-				Type:     schema.TypeList,
+			"id": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"pw": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"status": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"node": &schema.Schema{
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"name": &schema.Schema{
+				Type:     schema.TypeString,
 				Required: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"id": &schema.Schema{
-							Type:     schema.TypeInt,
-							Required: true,
-						},
-						"name": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"access_method": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"description": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"boot_menu": &schema.Schema{
-							Type:     schema.TypeBool,
-							Computed: true,
-						},
-						"lease": &schema.Schema{
-							Type:     schema.TypeInt,
-							Computed: true,
-						},
-						"cloud_init": &schema.Schema{
-							Type:     schema.TypeBool,
-							Computed: true,
-						},
-						"ci_meta_data": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"ci_user_data": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"system": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"has_agent": &schema.Schema{
-							Type:     schema.TypeBool,
-							Computed: true,
-						},
-						"num_cores": &schema.Schema{
-							Type:     schema.TypeInt,
-							Computed: true,
-						},
-						"ram_size": &schema.Schema{
-							Type:     schema.TypeInt,
-							Computed: true,
-						},
-						"max_ram_size": &schema.Schema{
-							Type:     schema.TypeInt,
-							Computed: true,
-						},
-						"arch": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"priority": &schema.Schema{
-							Type:     schema.TypeInt,
-							Computed: true,
-						},
-					},
-				},
+			},
+			"owner": &schema.Schema{
+				Type:     schema.TypeInt,
+				Required: true,
+			},
+			"access_method": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"description": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"boot_menu": &schema.Schema{
+				Type:     schema.TypeBool,
+				Required: true,
+			},
+			"lease": &schema.Schema{
+				Type:     schema.TypeInt,
+				Required: true,
+			},
+			"cloud_init": &schema.Schema{
+				Type:     schema.TypeBool,
+				Required: true,
+			},
+			"ci_meta_data": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"ci_user_data": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"system": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"has_agent": &schema.Schema{
+				Type:     schema.TypeBool,
+				Required: true,
+			},
+			"num_cores": &schema.Schema{
+				Type:     schema.TypeInt,
+				Required: true,
+			},
+			"ram_size": &schema.Schema{
+				Type:     schema.TypeInt,
+				Required: true,
+			},
+			"max_ram_size": &schema.Schema{
+				Type:     schema.TypeInt,
+				Required: true,
+			},
+			"arch": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"priority": &schema.Schema{
+				Type:     schema.TypeInt,
+				Required: true,
 			},
 		},
 	}
@@ -96,23 +105,39 @@ func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 
-	vms := d.Get("vms").([]interface{})
-	vmis := []circleclient.Lease{}
-
-	for _, item := range vms {
-		i := item.(map[string]interface{})
-
-		co := i["vm"].([]interface{})[0]
-		coffee := co.(map[string]interface{})
-
-		vm := hc.OrderItem{
-			Coffee: hc.Coffee{
-				ID: coffee["id"].(int),
-			},
-		}
-
-		vms = append(vms, vm)
+	empty_disk := []int{}
+	empty_req := []string{}
+	vmrest := circleclient.VM{
+		Owner:        d.Get("owner").(int),
+		Name:         d.Get("name").(string),
+		Description:  d.Get("description").(string),
+		Lease:        d.Get("lease").(int),
+		CloudInit:    d.Get("cloud_init").(bool),
+		CiMetaData:   d.Get("ci_meta_data").(string),
+		CiUserData:   d.Get("ci_user_data").(string),
+		System:       d.Get("system").(string),
+		HasAgent:     d.Get("has_agent").(bool),
+		NumCores:     d.Get("num_cores").(int),
+		RamSize:      d.Get("ram_size").(int),
+		MaxRamSize:   d.Get("max_ram_size").(int),
+		Priority:     d.Get("priority").(int),
+		AccessMethod: d.Get("access_method").(string),
+		Arch:         d.Get("arch").(string),
+		BootMenu:     d.Get("boot_menu").(bool),
+		Disks:        empty_disk,
+		ReqTraits:    empty_req,
 	}
+
+	newvm, err := c.CreateVM(vmrest)
+
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.SetId(strconv.Itoa(newvm.ID))
+	d.Set("pw", newvm.Pw)
+	d.Set("status", newvm.Status)
+	d.Set("node", strconv.Itoa(newvm.Node))
 
 	return diags
 }
@@ -129,8 +154,19 @@ func resourceVMUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 }
 
 func resourceVMDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	// Warning or errors can be collected in a slice type
+	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
+
+	vmid, err := strconv.Atoi(d.Id())
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	err = c.DeleteVM(vmid)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	d.SetId("")
 
 	return diags
 }

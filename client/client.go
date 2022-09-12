@@ -25,12 +25,12 @@ func NewClient(hostname string, port int, token string) *Client {
 		hostname:   hostname,
 		port:       port,
 		authToken:  token,
-		httpClient: &http.Client{Timeout: 10 * time.Second, Transport: transCfg},
+		httpClient: &http.Client{Timeout: 30 * time.Second, Transport: transCfg},
 	}
 }
 
 func (c *Client) GetAllLeases() ([]Lease, error) {
-	body, err := c.httpRequest("dashboard/acpi/lease/", "GET", bytes.Buffer{})
+	body, err := c.httpRequest("dashboard/acpi/lease/", "GET", bytes.Buffer{}, 200)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,42 @@ func (c *Client) GetAllLeases() ([]Lease, error) {
 	return items, nil
 }
 
-func (c *Client) httpRequest(path, method string, body bytes.Buffer) (closer io.ReadCloser, err error) {
+func (c *Client) GetLeasesByName(name string) (*Lease, error) {
+	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/lease?name=%s", name), "GET", bytes.Buffer{}, 200)
+	if err != nil {
+		return nil, err
+	}
+	item := Lease{}
+	err = json.NewDecoder(body).Decode(&item)
+	if err != nil {
+		return nil, err
+	}
+	return &item, nil
+}
+
+func (c *Client) CreateVM(vm VM) (*VM, error) {
+	reqvm, err := json.Marshal(vm)
+	if err != nil {
+		return nil, err
+	}
+	body, err := c.httpRequest("dashboard/acpi/vm/", "POST", *bytes.NewBuffer(reqvm), 201)
+	if err != nil {
+		return nil, err
+	}
+	retvm := VM{}
+	err = json.NewDecoder(body).Decode(&retvm)
+	if err != nil {
+		return nil, err
+	}
+	return &retvm, nil
+}
+
+func (c *Client) DeleteVM(id int) error {
+	_, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%v/", id), "DELETE", bytes.Buffer{}, 401)
+	return err
+}
+
+func (c *Client) httpRequest(path, method string, body bytes.Buffer, allowedStaus int) (closer io.ReadCloser, err error) {
 	req, err := http.NewRequest(method, c.requestPath(path), &body)
 	if err != nil {
 		return nil, err
@@ -60,7 +95,7 @@ func (c *Client) httpRequest(path, method string, body bytes.Buffer) (closer io.
 		return nil, err
 	}
 
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != allowedStaus {
 		respBody := new(bytes.Buffer)
 		_, err := respBody.ReadFrom(resp.Body)
 		if err != nil {

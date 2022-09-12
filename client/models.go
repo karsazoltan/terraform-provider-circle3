@@ -28,7 +28,7 @@ type VM struct {
 	Lease        int      `json:"lease"`
 	MaxRamSize   int      `json:"max_ram_size"`
 	Name         string   `json:"name"`
-	Node         string   `json:"node"`
+	Node         int      `json:"node,omitempty"`
 	NumCores     int      `json:"num_cores"`
 	Owner        int      `json:"owner"`
 	Priority     int      `json:"priority"`
