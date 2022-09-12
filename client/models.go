@@ -19,7 +19,7 @@ type VM struct {
 	CiUserData   string   `json:"ci_user_data"`
 	CloudInit    bool     `json:"cloud_init"`
 	Description  string   `json:"description"`
-	Disks        []int    `json:"disks"`
+	Disks        []int    `json:"disks,omitempty"`
 	HasAgent     bool     `json:"has_agent"`
 	ID           int      `json:"id"`
 	Ipv4Addr     string   `json:"ipv4addr"`
@@ -35,9 +35,10 @@ type VM struct {
 	Pw           string   `json:"pw"`
 	RamSize      int      `json:"ram_size"`
 	RawData      string   `json:"raw_data"`
-	ReqTraits    []string `json:"req_traits"`
+	ReqTraits    []string `json:"req_traits,omitempty"`
 	Status       string   `json:"status"`
 	System       string   `json:"system"`
+	Vlans        []int    `json:"vlans,omitempty"`
 }
 
 type Template struct {
@@ -84,4 +85,13 @@ type Interface struct {
 	Instance int    `json:"instance"`
 	Model    string `json:"model"`
 	Vlan     int    `json:"vlan"`
+}
+
+type Vlan struct {
+	Comment     string `json:"comment"`
+	Description string `json:"description"`
+	Domain      int    `json:"domain"`
+	ID          int    `json:"id"`
+	Name        string `json:"name"`
+	Vid         int    `json:"vid"`
 }

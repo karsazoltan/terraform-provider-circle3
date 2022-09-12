@@ -6,7 +6,6 @@ terraform {
     }
   }
 }
-
 provider "circle3" {
   address = "https://cloud3.fured.cloud.bme.hu"
   port    = 443
@@ -16,11 +15,9 @@ provider "circle3" {
 data "circle3_lease_byname" "labor_lease" {
   name = "lab"
 }
-
 output "labor_output" {
   value = data.circle3_lease_byname.labor_lease
 }
-
 resource "circle3_vm" "basic" {
   owner         = 1
   name          = "terraform"
@@ -39,7 +36,6 @@ resource "circle3_vm" "basic" {
   priority      = 30
   arch          = "x86_64"
 }
-
 output "vm_create" {
   value = circle3_vm.basic
 }
