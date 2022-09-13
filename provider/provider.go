@@ -26,7 +26,8 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"circle3_vm": resourceVM(),
+			"circle3_vm":    resourceVM(),
+			"circle3_ddisk": resourceDDisk(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"circle3_leases":       dataSourceLeases(),

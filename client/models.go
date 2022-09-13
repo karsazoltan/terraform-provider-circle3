@@ -95,3 +95,36 @@ type Vlan struct {
 	Name        string `json:"name"`
 	Vid         int    `json:"vid"`
 }
+
+type DDisk struct {
+	Instance int    `json:"instance"`
+	Url      string `json:"url"`
+	Name     string `json:"name"`
+}
+
+type Activities struct {
+	ActivityCode  string    `json:"activity_code"`
+	Created       time.Time `json:"created"`
+	Finished      time.Time `json:"finished"`
+	GetPercentage int       `json:"get_percentage"`
+	ID            int       `json:"id"`
+	Instance      int       `json:"instance"`
+	Interruptible bool      `json:"interruptible"`
+	Modified      time.Time `json:"modified"`
+	Parent        int       `json:"parent,omitempty"`
+	ResultData    struct {
+		AdminTextTemplate string `json:"admin_text_template"`
+		Params            struct {
+			Checksum string `json:"checksum"`
+			DiskID   int    `json:"disk_id"`
+			DiskSize int    `json:"disk_size"`
+			URL      string `json:"url"`
+		} `json:"params,omitempty"`
+		UserTextTemplate string `json:"user_text_template"`
+	} `json:"result_data,omitempty"`
+	ResultantState string    `json:"resultant_state"`
+	Started        time.Time `json:"started"`
+	Succeeded      bool      `json:"succeeded"`
+	TaskUuid       string    `json:"task_uuid"`
+	User           int       `json:"user"`
+}

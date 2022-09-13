@@ -98,6 +98,36 @@ func (c *Client) CreateVM(vm VM) (*VM, error) {
 	return &retvm, nil
 }
 
+func (c *Client) CreateDDisk(ddiskk DDisk) (*Activities, error) {
+	reqvm, err := json.Marshal(ddiskk)
+	if err != nil {
+		return nil, err
+	}
+	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%v/downloaddisk/", ddiskk.Instance), "POST", *bytes.NewBuffer(reqvm), 201)
+	if err != nil {
+		return nil, err
+	}
+	ret := Activities{}
+	err = json.NewDecoder(body).Decode(&ret)
+	if err != nil {
+		return nil, err
+	}
+	return &ret, nil
+}
+
+func (c *Client) GetActivity(id int) (*Activities, error) {
+	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vmact/%v/", id), "GET", bytes.Buffer{}, 200)
+	if err != nil {
+		return nil, err
+	}
+	ret := Activities{}
+	err = json.NewDecoder(body).Decode(&ret)
+	if err != nil {
+		return nil, err
+	}
+	return &ret, nil
+}
+
 func (c *Client) DeleteVM(id int) error {
 	_, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%v/", id), "DELETE", bytes.Buffer{}, 401)
 	return err
