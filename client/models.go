@@ -102,6 +102,12 @@ type DDisk struct {
 	Name     string `json:"name"`
 }
 
+type CDisk struct {
+	Instance int    `json:"instance"`
+	Size     string `json:"size"`
+	Name     string `json:"name"`
+}
+
 type Activities struct {
 	ActivityCode  string    `json:"activity_code"`
 	Created       time.Time `json:"created"`

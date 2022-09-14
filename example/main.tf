@@ -35,10 +35,16 @@ resource "circle3_vm" "basic" {
   arch          = "x86_64"
 }
 
+resource "circle3_cdisk" "empty_disk" {
+  size_format = "5Gi"
+  name = "empty_disk"
+  vm = circle3_vm.basic.id
+}
+
 resource "circle3_ddisk" "puppy_linux" {
   name = "puppy-linux"
   url = "http://distro.ibiblio.org/puppylinux/puppy-fossa/fossapup64-9.5.iso"
-  vm = resource.circle3_vm.basic.id
+  vm = circle3_vm.basic.id
 }
 
 //output "vm_create" {

@@ -9,68 +9,86 @@
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 400)">
 <title>%3</title>
 <polygon fill="white" stroke="transparent" points="-4,4 -4,-400 533.43,-400 533.43,4 -4,4"/>
-<!-- [root] circle3_ddisk.puppy_linux (expand) -->
+<!-- [root] circle3_cdisk.empty_disk (expand) -->
 <g id="node1" class="node">
-<title>[root] circle3_ddisk.puppy_linux (expand)</title>
-<polygon fill="none" stroke="black" points="364.72,-252 164.72,-252 164.72,-216 364.72,-216 364.72,-252"/>
-<text text-anchor="middle" x="264.72" y="-230.3" font-family="Times,serif" font-size="14.00">circle3_ddisk.puppy_linux</text>
+<title>[root] circle3_cdisk.empty_disk (expand)</title>
+<polygon fill="none" stroke="black" points="254.72,-252 60.72,-252 60.72,-216 254.72,-216 254.72,-252"/>
+<text text-anchor="middle" x="157.72" y="-230.3" font-family="Times,serif" font-size="14.00">circle3_cdisk.empty_disk</text>
 </g>
 <!-- [root] circle3_vm.basic (expand) -->
-<g id="node2" class="node">
+<g id="node3" class="node">
 <title>[root] circle3_vm.basic (expand)</title>
 <polygon fill="none" stroke="black" points="331.72,-180 197.72,-180 197.72,-144 331.72,-144 331.72,-180"/>
 <text text-anchor="middle" x="264.72" y="-158.3" font-family="Times,serif" font-size="14.00">circle3_vm.basic</text>
 </g>
-<!-- [root] circle3_ddisk.puppy_linux (expand)&#45;&gt;[root] circle3_vm.basic (expand) -->
+<!-- [root] circle3_cdisk.empty_disk (expand)&#45;&gt;[root] circle3_vm.basic (expand) -->
 <g id="edge1" class="edge">
+<title>[root] circle3_cdisk.empty_disk (expand)&#45;&gt;[root] circle3_vm.basic (expand)</title>
+<path fill="none" stroke="black" d="M183.89,-215.88C197.75,-206.81 214.96,-195.55 229.93,-185.76"/>
+<polygon fill="black" stroke="black" points="231.99,-188.59 238.44,-180.19 228.16,-182.74 231.99,-188.59"/>
+</g>
+<!-- [root] circle3_ddisk.puppy_linux (expand) -->
+<g id="node2" class="node">
+<title>[root] circle3_ddisk.puppy_linux (expand)</title>
+<polygon fill="none" stroke="black" points="472.72,-252 272.72,-252 272.72,-216 472.72,-216 472.72,-252"/>
+<text text-anchor="middle" x="372.72" y="-230.3" font-family="Times,serif" font-size="14.00">circle3_ddisk.puppy_linux</text>
+</g>
+<!-- [root] circle3_ddisk.puppy_linux (expand)&#45;&gt;[root] circle3_vm.basic (expand) -->
+<g id="edge2" class="edge">
 <title>[root] circle3_ddisk.puppy_linux (expand)&#45;&gt;[root] circle3_vm.basic (expand)</title>
-<path fill="none" stroke="black" d="M264.72,-215.7C264.72,-207.98 264.72,-198.71 264.72,-190.11"/>
-<polygon fill="black" stroke="black" points="268.22,-190.1 264.72,-180.1 261.22,-190.1 268.22,-190.1"/>
+<path fill="none" stroke="black" d="M346.3,-215.88C332.31,-206.81 314.94,-195.55 299.83,-185.76"/>
+<polygon fill="black" stroke="black" points="301.53,-182.69 291.24,-180.19 297.73,-188.57 301.53,-182.69"/>
 </g>
 <!-- [root] data.circle3_lease_byname.labor_lease (expand) -->
-<g id="node3" class="node">
+<g id="node4" class="node">
 <title>[root] data.circle3_lease_byname.labor_lease (expand)</title>
 <polygon fill="none" stroke="black" points="410.72,-108 118.72,-108 118.72,-72 410.72,-72 410.72,-108"/>
 <text text-anchor="middle" x="264.72" y="-86.3" font-family="Times,serif" font-size="14.00">data.circle3_lease_byname.labor_lease</text>
 </g>
 <!-- [root] circle3_vm.basic (expand)&#45;&gt;[root] data.circle3_lease_byname.labor_lease (expand) -->
-<g id="edge2" class="edge">
+<g id="edge3" class="edge">
 <title>[root] circle3_vm.basic (expand)&#45;&gt;[root] data.circle3_lease_byname.labor_lease (expand)</title>
 <path fill="none" stroke="black" d="M264.72,-143.7C264.72,-135.98 264.72,-126.71 264.72,-118.11"/>
 <polygon fill="black" stroke="black" points="268.22,-118.1 264.72,-108.1 261.22,-118.1 268.22,-118.1"/>
 </g>
 <!-- [root] provider[&quot;hashicorp.com/edu/circle3&quot;] -->
-<g id="node4" class="node">
+<g id="node5" class="node">
 <title>[root] provider[&quot;hashicorp.com/edu/circle3&quot;]</title>
 <polygon fill="none" stroke="black" points="264.72,-36 -0.22,-18 264.72,0 529.65,-18 264.72,-36"/>
 <text text-anchor="middle" x="264.72" y="-14.3" font-family="Times,serif" font-size="14.00">provider[&quot;hashicorp.com/edu/circle3&quot;]</text>
 </g>
 <!-- [root] data.circle3_lease_byname.labor_lease (expand)&#45;&gt;[root] provider[&quot;hashicorp.com/edu/circle3&quot;] -->
-<g id="edge3" class="edge">
+<g id="edge4" class="edge">
 <title>[root] data.circle3_lease_byname.labor_lease (expand)&#45;&gt;[root] provider[&quot;hashicorp.com/edu/circle3&quot;]</title>
 <path fill="none" stroke="black" d="M264.72,-71.7C264.72,-63.98 264.72,-54.71 264.72,-46.11"/>
 <polygon fill="black" stroke="black" points="268.22,-46.1 264.72,-36.1 261.22,-46.1 268.22,-46.1"/>
 </g>
 <!-- [root] provider[&quot;hashicorp.com/edu/circle3&quot;] (close) -->
-<g id="node5" class="node">
+<g id="node6" class="node">
 <title>[root] provider[&quot;hashicorp.com/edu/circle3&quot;] (close)</title>
 <ellipse fill="none" stroke="black" cx="264.72" cy="-306" rx="248.86" ry="18"/>
 <text text-anchor="middle" x="264.72" y="-302.3" font-family="Times,serif" font-size="14.00">[root] provider[&quot;hashicorp.com/edu/circle3&quot;] (close)</text>
 </g>
+<!-- [root] provider[&quot;hashicorp.com/edu/circle3&quot;] (close)&#45;&gt;[root] circle3_cdisk.empty_disk (expand) -->
+<g id="edge5" class="edge">
+<title>[root] provider[&quot;hashicorp.com/edu/circle3&quot;] (close)&#45;&gt;[root] circle3_cdisk.empty_disk (expand)</title>
+<path fill="none" stroke="black" d="M238.82,-288.05C224.86,-278.92 207.44,-267.53 192.34,-257.65"/>
+<polygon fill="black" stroke="black" points="194.04,-254.58 183.75,-252.03 190.2,-260.44 194.04,-254.58"/>
+</g>
 <!-- [root] provider[&quot;hashicorp.com/edu/circle3&quot;] (close)&#45;&gt;[root] circle3_ddisk.puppy_linux (expand) -->
-<g id="edge4" class="edge">
+<g id="edge6" class="edge">
 <title>[root] provider[&quot;hashicorp.com/edu/circle3&quot;] (close)&#45;&gt;[root] circle3_ddisk.puppy_linux (expand)</title>
-<path fill="none" stroke="black" d="M264.72,-287.7C264.72,-279.98 264.72,-270.71 264.72,-262.11"/>
-<polygon fill="black" stroke="black" points="268.22,-262.1 264.72,-252.1 261.22,-262.1 268.22,-262.1"/>
+<path fill="none" stroke="black" d="M290.86,-288.05C304.95,-278.92 322.53,-267.53 337.77,-257.65"/>
+<polygon fill="black" stroke="black" points="339.95,-260.41 346.44,-252.03 336.14,-254.53 339.95,-260.41"/>
 </g>
 <!-- [root] root -->
-<g id="node6" class="node">
+<g id="node7" class="node">
 <title>[root] root</title>
 <ellipse fill="none" stroke="black" cx="264.72" cy="-378" rx="58.49" ry="18"/>
 <text text-anchor="middle" x="264.72" y="-374.3" font-family="Times,serif" font-size="14.00">[root] root</text>
 </g>
 <!-- [root] root&#45;&gt;[root] provider[&quot;hashicorp.com/edu/circle3&quot;] (close) -->
-<g id="edge5" class="edge">
+<g id="edge7" class="edge">
 <title>[root] root&#45;&gt;[root] provider[&quot;hashicorp.com/edu/circle3&quot;] (close)</title>
 <path fill="none" stroke="black" d="M264.72,-359.7C264.72,-351.98 264.72,-342.71 264.72,-334.11"/>
 <polygon fill="black" stroke="black" points="268.22,-334.1 264.72,-324.1 261.22,-334.1 268.22,-334.1"/>

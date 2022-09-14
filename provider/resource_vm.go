@@ -27,10 +27,19 @@ func resourceVM() *schema.Resource {
 			},
 			"status": &schema.Schema{
 				Type:     schema.TypeString,
+				Optional: true,
 				Computed: true,
 			},
 			"node": &schema.Schema{
 				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"ipv4": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"ipv6": &schema.Schema{
+				Type:     schema.TypeString,
 				Computed: true,
 			},
 			"name": &schema.Schema{
@@ -97,6 +106,11 @@ func resourceVM() *schema.Resource {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
+			"vlans": &schema.Schema{
+				Type:     schema.TypeList,
+				Elem:     schema.TypeInt,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -128,6 +142,11 @@ func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 		ReqTraits:    empty_req,
 	}
 
+	if d.Get("vlans") != nil {
+		vlans := d.Get("vlans").([]int)
+		vmrest.Vlans = vlans
+	}
+
 	newvm, err := c.CreateVM(vmrest)
 
 	if err != nil {
@@ -135,21 +154,45 @@ func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 	}
 
 	d.SetId(strconv.Itoa(newvm.ID))
-	d.Set("pw", newvm.Pw)
-	d.Set("status", newvm.Status)
-	d.Set("node", strconv.Itoa(newvm.Node))
 
 	return diags
 }
 
 func resourceVMRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	// Warning or errors can be collected in a slice type
+	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
+
+	vmid, err := strconv.Atoi(d.Id())
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	vm, err := c.GetVM(vmid)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.Set("pw", vm.Pw)
+	d.Set("status", vm.Status)
+	d.Set("node", strconv.Itoa(vm.Node))
+	d.Set("ipv4", vm.Ipv4Addr)
+	d.Set("ipv6", vm.Ipv6Addr)
 
 	return diags
 }
 
 func resourceVMUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	c := m.(*circleclient.Client)
+
+	vmid, err := strconv.Atoi(d.Id())
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	if d.HasChange("state") {
+		old, new := d.GetChange("state")
+		c.UpdateVMState(vmid, old.(string), new.(string))
+	}
+
 	return resourceVMRead(ctx, d, m)
 }
 
