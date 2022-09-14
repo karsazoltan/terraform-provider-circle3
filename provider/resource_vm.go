@@ -94,21 +94,23 @@ func resourceVM() *schema.Resource {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"max_ram_size": &schema.Schema{
+			"max_ram_size": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"arch": &schema.Schema{
+			"arch": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"priority": &schema.Schema{
+			"priority": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"vlans": &schema.Schema{
-				Type:     schema.TypeList,
-				Elem:     schema.TypeInt,
+			"vlans": {
+				Type: schema.TypeList,
+				Elem: &schema.Schema{
+					Type: schema.TypeInt,
+				},
 				Optional: true,
 			},
 		},
@@ -143,7 +145,11 @@ func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 	}
 
 	if d.Get("vlans") != nil {
-		vlans := d.Get("vlans").([]int)
+		resource_vlans := d.Get("vlans").([]interface{})
+		vlans := make([]int, len(resource_vlans))
+		for _, e := range resource_vlans {
+			vlans = append(vlans, e.(int))
+		}
 		vmrest.Vlans = vlans
 	}
 

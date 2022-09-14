@@ -108,7 +108,7 @@ type CDisk struct {
 	Name     string `json:"name"`
 }
 
-type Activities struct {
+type InstanceActivities struct {
 	ActivityCode  string    `json:"activity_code"`
 	Created       time.Time `json:"created"`
 	Finished      time.Time `json:"finished"`
@@ -133,4 +133,18 @@ type Activities struct {
 	Succeeded      bool      `json:"succeeded"`
 	TaskUuid       string    `json:"task_uuid"`
 	User           int       `json:"user"`
+}
+
+type StorageActivity struct {
+	Created    time.Time `json:"created"`
+	Disk       int       `json:"disk"`
+	Finished   time.Time `json:"finished"`
+	ID         int       `json:"id"`
+	Modified   time.Time `json:"modified"`
+	Parent     int       `json:"parent"`
+	ResultData string    `json:"result_data"`
+	Started    time.Time `json:"started"`
+	Succeeded  bool      `json:"succeeded"`
+	TaskUuid   string    `json:"task_uuid"`
+	User       int       `json:"user"`
 }

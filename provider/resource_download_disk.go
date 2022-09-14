@@ -103,11 +103,11 @@ func resourceDDiskCreate(ctx context.Context, d *schema.ResourceData, m interfac
 
 	for !activity.Succeeded {
 		time.Sleep(time.Second)
-		activity, err = c.GetActivity(activity.ID)
+		activity, err = c.GetInstanceActivities(activity.ID)
 		if err != nil {
 			return diag.FromErr(err)
 		}
-		tflog.Info(ctx, fmt.Sprintf("Downloading (%v%) ... ", activity.GetPercentage))
+		tflog.Info(ctx, fmt.Sprintf("Downloading (%v) ... ", activity.GetPercentage))
 	}
 
 	d.SetId(strconv.Itoa(activity.ResultData.Params.DiskID))

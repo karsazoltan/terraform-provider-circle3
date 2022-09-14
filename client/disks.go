@@ -36,7 +36,7 @@ func (c *Client) CreateCDisk(cdisk CDisk) (*Disk, error) {
 	return &ret, nil
 }
 
-func (c *Client) CreateDDisk(ddiskk DDisk) (*Activities, error) {
+func (c *Client) CreateDDisk(ddiskk DDisk) (*InstanceActivities, error) {
 	reqvm, err := json.Marshal(ddiskk)
 	if err != nil {
 		return nil, err
@@ -45,7 +45,41 @@ func (c *Client) CreateDDisk(ddiskk DDisk) (*Activities, error) {
 	if err != nil {
 		return nil, err
 	}
-	ret := Activities{}
+	ret := InstanceActivities{}
+	err = json.NewDecoder(body).Decode(&ret)
+	if err != nil {
+		return nil, err
+	}
+	return &ret, nil
+}
+
+func (c *Client) CreatePersistentCDisk(cdisk CDisk) (*Disk, error) {
+	reqdisk, err := json.Marshal(cdisk)
+	if err != nil {
+		return nil, err
+	}
+	body, err := c.httpRequest("dashboard/acpi/pcdisk/", "POST", *bytes.NewBuffer(reqdisk), 201)
+	if err != nil {
+		return nil, err
+	}
+	ret := Disk{}
+	err = json.NewDecoder(body).Decode(&ret)
+	if err != nil {
+		return nil, err
+	}
+	return &ret, nil
+}
+
+func (c *Client) CreatePersistentDDisk(ddiskk DDisk) (*StorageActivity, error) {
+	reqdisk, err := json.Marshal(ddiskk)
+	if err != nil {
+		return nil, err
+	}
+	body, err := c.httpRequest("dashboard/acpi/pddisk/", "POST", *bytes.NewBuffer(reqdisk), 201)
+	if err != nil {
+		return nil, err
+	}
+	ret := StorageActivity{}
 	err = json.NewDecoder(body).Decode(&ret)
 	if err != nil {
 		return nil, err
