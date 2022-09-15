@@ -3,13 +3,10 @@ package provider
 import (
 	"context"
 	"errors"
-	"fmt"
-	"log"
 	"strconv"
 
 	circleclient "terraform-provider-circle3/client"
 
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -165,10 +162,8 @@ func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 	if d.Get("disks") != nil {
 		resource_disks := d.Get("disks").([]interface{})
 		disks := make([]int, len(resource_disks))
-		for _, e := range resource_disks {
-			disks = append(disks, e.(int))
-			tflog.Info(ctx, fmt.Sprintf(" - %v - ", e))
-			log.Printf(fmt.Sprintf(" - %v - ", e))
+		for i, e := range resource_disks {
+			disks[i] = e.(int)
 		}
 		vmrest.Disks = disks
 	}
