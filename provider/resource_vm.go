@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"errors"
 	"strconv"
 
 	circleclient "terraform-provider-circle3/client"
@@ -152,13 +153,10 @@ func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 		}
 		vmrest.Vlans = vlans
 	}
-
 	newvm, err := c.CreateVM(vmrest)
-
 	if err != nil {
 		return diag.FromErr(err)
 	}
-
 	d.SetId(strconv.Itoa(newvm.ID))
 
 	return diags
@@ -188,15 +186,32 @@ func resourceVMRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 
 func resourceVMUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*circleclient.Client)
-
 	vmid, err := strconv.Atoi(d.Id())
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
+	if d.HasChange("lease") {
+		c.UpdateVMLease(vmid, d.Get("lease").(int))
+	}
+
 	if d.HasChange("state") {
 		old, new := d.GetChange("state")
 		c.UpdateVMState(vmid, old.(string), new.(string))
+	}
+
+	if d.HasChange("num_cores") || d.HasChange("ram_size") || d.HasChange("max_ram_size") || d.HasChange("priority") {
+		if d.Get("state") == "STOPPED" {
+			update := circleclient.VMResource{
+				MaxRamSize: d.Get("max_ram_size").(int),
+				RamSize:    d.Get("ram_size").(int),
+				NumCores:   d.Get("num_cores").(int),
+				Priority:   d.Get("priority").(int),
+			}
+			c.UpdateVMResource(vmid, update)
+		} else {
+			return diag.FromErr(errors.New("VM state is incorrect for change resources"))
+		}
 	}
 
 	return resourceVMRead(ctx, d, m)

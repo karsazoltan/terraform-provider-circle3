@@ -24,6 +24,35 @@ func (c *Client) GetVM(id int) (*VM, error) {
 	return &ret, nil
 }
 
+func (c *Client) UpdateVMResource(id int, resource VMResource) error {
+	reqres, err := json.Marshal(resource)
+	if err != nil {
+		return err
+	}
+	_, err = c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%d/updateresource", id), "PUT", *bytes.NewBuffer(reqres), 201)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Client) UpdateVMLease(id int, lease_new int) error {
+	lease := struct {
+		Lease int `json:"lease"`
+	}{
+		Lease: lease_new,
+	}
+	reqres, err := json.Marshal(lease)
+	if err != nil {
+		return err
+	}
+	_, err = c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%d/updatelease", id), "PUT", *bytes.NewBuffer(reqres), 201)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (c *Client) DeployVM(id int) error {
 	_, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%v/deploy/", id), "POST", bytes.Buffer{}, 200)
 	if err != nil {

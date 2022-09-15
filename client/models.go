@@ -41,6 +41,14 @@ type VM struct {
 	Vlans        []int    `json:"vlans,omitempty"`
 }
 
+type VMResource struct {
+	Lease      int `json:"lease"`
+	MaxRamSize int `json:"max_ram_size"`
+	NumCores   int `json:"num_cores"`
+	Priority   int `json:"priority"`
+	RamSize    int `json:"ram_size"`
+}
+
 type Template struct {
 	AccessMethod string `json:"access_method"`
 	Arch         string `json:"arch"`
