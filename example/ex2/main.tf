@@ -17,13 +17,13 @@ data "circle3_lease_byname" "labor_lease" {
 }
 
 resource "circle3_volume_create" "empty_disk" {
-  size_format = "5Gi"
+  size_format = "3Gi"
   name = "empty_disk"
 }
 
-resource "circle3_volume_download" "puppy_linux" {
-  name = "puppy-linux"
-  url = "http://distro.ibiblio.org/puppylinux/puppy-fossa/fossapup64-9.5.iso"
+resource "circle3_volume_download" "tiny_linux" {
+  name = "tinycore-linux"
+  url = "http://tinycorelinux.net/13.x/x86/release/TinyCore-current.iso"
 }
 
 resource "circle3_vm" "basic" {
@@ -45,7 +45,7 @@ resource "circle3_vm" "basic" {
   arch          = "x86_64"
   disks         = [ 
     circle3_volume_create.empty_disk.id, 
-    circle3_volume_download.puppy_linux.id 
+    circle3_volume_download.tiny_linux.id 
   ]
 }
 

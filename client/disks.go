@@ -99,6 +99,11 @@ func (c *Client) DeleteDisk(instance_id int, disk_id int) error {
 	return err
 }
 
+func (c *Client) DeletePersistentDisk(disk_id int) error {
+	_, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/disk/%v", disk_id), "DELETE", bytes.Buffer{}, 204)
+	return err
+}
+
 func (c *Client) AddNewPersistentDiskToVM(vm_id int, disk_id int) (*Disk, error) {
 	reqstruct := struct {
 		Disk int `json:"disk"`

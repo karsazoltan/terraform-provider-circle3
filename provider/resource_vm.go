@@ -243,20 +243,18 @@ func resourceVMUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 			olds_int = append(olds_int, n.(int))
 		}
 
-		new_elements := make([]int, 0)
-		deleted_elements := make([]int, 0)
-
 		for _, n := range news_int {
+			// new disks
 			if !contains(olds_int, n) {
-				new_elements = append(new_elements, n)
+				c.AddNewPersistentDiskToVM(vmid, n)
 			}
 		}
 		for _, n := range olds_int {
+			// deleted disks
 			if !contains(news_int, n) {
-				deleted_elements = append(deleted_elements, n)
+				c.DeleteDisk(vmid, n)
 			}
 		}
-
 	}
 
 	return resourceVMRead(ctx, d, m)
