@@ -3,19 +3,21 @@ package provider
 import (
 	"context"
 	"strconv"
+	"time"
 
 	circleclient "terraform-provider-circle3/client"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func resourcePersistentCDisk() *schema.Resource {
+func resourcePersistentDDisk() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourcePersistentCDiskCreate,
-		ReadContext:   resourcePersistentCDiskRead,
-		UpdateContext: resourcePersistentCDiskUpdate,
-		DeleteContext: resourcePersistentCDiskDelete,
+		CreateContext: resourcePersistentDDiskCreate,
+		ReadContext:   resourcePersistentDDiskRead,
+		UpdateContext: resourcePersistentDDiskUpdate,
+		DeleteContext: resourcePersistentDDiskDelete,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:     schema.TypeString,
@@ -61,42 +63,55 @@ func resourcePersistentCDisk() *schema.Resource {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
+			"checksum": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"size_format": {
-				Type:             schema.TypeString,
-				Required:         true,
-				ValidateDiagFunc: ValidateSize,
+			"url": {
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
 			},
 		},
 	}
 }
 
-func resourcePersistentCDiskCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourcePersistentDDiskCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 
-	cdisk := circleclient.CDisk{
-		Size: d.Get("size_format").(string),
+	vmrest := circleclient.DDisk{
+		Url:  d.Get("url").(string),
 		Name: d.Get("name").(string),
 	}
 
-	disk, err := c.CreatePersistentCDisk(cdisk)
+	activity, err := c.CreatePersistentDDisk(vmrest)
 
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	d.SetId(strconv.Itoa(disk.ID))
+	for !activity.Succeeded {
+		time.Sleep(time.Second)
+		activity, err = c.GetStorageActivity(activity.ID)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		tflog.Info(ctx, "Downloading ... ")
+	}
 
-	resourcePersistentCDiskRead(ctx, d, m)
+	d.SetId(strconv.Itoa(activity.Disk))
+
+	resourcePersistentDDiskRead(ctx, d, m)
 
 	return diags
 }
 
-func resourcePersistentCDiskRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourcePersistentDDiskRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 
@@ -123,11 +138,11 @@ func resourcePersistentCDiskRead(ctx context.Context, d *schema.ResourceData, m 
 	return diags
 }
 
-func resourcePersistentCDiskUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	return resourcePersistentCDiskRead(ctx, d, m)
+func resourcePersistentDDiskUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	return resourcePersistentDDiskRead(ctx, d, m)
 }
 
-func resourcePersistentCDiskDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourcePersistentDDiskDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 

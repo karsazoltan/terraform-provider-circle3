@@ -15,24 +15,24 @@ func dataSourceLeases() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceLeasesRead,
 		Schema: map[string]*schema.Schema{
-			"leases": &schema.Schema{
+			"leases": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"id": &schema.Schema{
+						"id": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"name": &schema.Schema{
+						"name": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"suspend_interval_seconds": &schema.Schema{
+						"suspend_interval_seconds": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"delete_interval_seconds": &schema.Schema{
+						"delete_interval_seconds": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
@@ -46,7 +46,6 @@ func dataSourceLeases() *schema.Resource {
 func dataSourceLeasesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*circleclient.Client)
 
-	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
 	reqlease, err := c.GetAllLeases()
@@ -80,19 +79,19 @@ func dataSourceLeasesByName() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceLeasesByNameRead,
 		Schema: map[string]*schema.Schema{
-			"id": &schema.Schema{
+			"id": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"suspend_interval_seconds": &schema.Schema{
+			"suspend_interval_seconds": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"delete_interval_seconds": &schema.Schema{
+			"delete_interval_seconds": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},

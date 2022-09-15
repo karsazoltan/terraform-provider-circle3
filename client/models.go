@@ -105,13 +105,13 @@ type Vlan struct {
 }
 
 type DDisk struct {
-	Instance int    `json:"instance"`
+	Instance int    `json:"instance,omitempty"`
 	Url      string `json:"url"`
 	Name     string `json:"name"`
 }
 
 type CDisk struct {
-	Instance int    `json:"instance"`
+	Instance int    `json:"instance,omitempty"`
 	Size     string `json:"size"`
 	Name     string `json:"name"`
 }

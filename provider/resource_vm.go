@@ -3,10 +3,13 @@ package provider
 import (
 	"context"
 	"errors"
+	"fmt"
+	"log"
 	"strconv"
 
 	circleclient "terraform-provider-circle3/client"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -18,80 +21,80 @@ func resourceVM() *schema.Resource {
 		UpdateContext: resourceVMUpdate,
 		DeleteContext: resourceVMDelete,
 		Schema: map[string]*schema.Schema{
-			"id": &schema.Schema{
+			"id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"pw": &schema.Schema{
+			"pw": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"status": &schema.Schema{
+			"status": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 			},
-			"node": &schema.Schema{
+			"node": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"ipv4": &schema.Schema{
+			"ipv4": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"ipv6": &schema.Schema{
+			"ipv6": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"owner": &schema.Schema{
+			"owner": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"access_method": &schema.Schema{
+			"access_method": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"description": &schema.Schema{
+			"description": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"boot_menu": &schema.Schema{
+			"boot_menu": {
 				Type:     schema.TypeBool,
 				Required: true,
 			},
-			"lease": &schema.Schema{
+			"lease": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"cloud_init": &schema.Schema{
+			"cloud_init": {
 				Type:     schema.TypeBool,
 				Required: true,
 			},
-			"ci_meta_data": &schema.Schema{
+			"ci_meta_data": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"ci_user_data": &schema.Schema{
+			"ci_user_data": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"system": &schema.Schema{
+			"system": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"has_agent": &schema.Schema{
+			"has_agent": {
 				Type:     schema.TypeBool,
 				Required: true,
 			},
-			"num_cores": &schema.Schema{
+			"num_cores": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"ram_size": &schema.Schema{
+			"ram_size": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
@@ -114,6 +117,13 @@ func resourceVM() *schema.Resource {
 				},
 				Optional: true,
 			},
+			"disks": {
+				Type: schema.TypeList,
+				Elem: &schema.Schema{
+					Type: schema.TypeInt,
+				},
+				Optional: true,
+			},
 		},
 	}
 }
@@ -122,7 +132,6 @@ func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 
-	empty_disk := []int{}
 	empty_req := []string{}
 	vmrest := circleclient.VM{
 		Owner:        d.Get("owner").(int),
@@ -141,7 +150,6 @@ func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 		AccessMethod: d.Get("access_method").(string),
 		Arch:         d.Get("arch").(string),
 		BootMenu:     d.Get("boot_menu").(bool),
-		Disks:        empty_disk,
 		ReqTraits:    empty_req,
 	}
 
@@ -153,6 +161,18 @@ func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 		}
 		vmrest.Vlans = vlans
 	}
+
+	if d.Get("disks") != nil {
+		resource_disks := d.Get("disks").([]interface{})
+		disks := make([]int, len(resource_disks))
+		for _, e := range resource_disks {
+			disks = append(disks, e.(int))
+			tflog.Info(ctx, fmt.Sprintf(" - %v - ", e))
+			log.Printf(fmt.Sprintf(" - %v - ", e))
+		}
+		vmrest.Disks = disks
+	}
+
 	newvm, err := c.CreateVM(vmrest)
 	if err != nil {
 		return diag.FromErr(err)

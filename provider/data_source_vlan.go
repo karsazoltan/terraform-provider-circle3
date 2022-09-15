@@ -15,32 +15,32 @@ func dataSourceVlans() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceVlansRead,
 		Schema: map[string]*schema.Schema{
-			"vlans": &schema.Schema{
+			"vlans": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"id": &schema.Schema{
+						"id": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"name": &schema.Schema{
+						"name": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"vid": &schema.Schema{
+						"vid": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"domain": &schema.Schema{
+						"domain": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"comment": &schema.Schema{
+						"comment": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"description": &schema.Schema{
+						"description": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
@@ -90,27 +90,27 @@ func dataSourceVlanByName() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceVlanByNameRead,
 		Schema: map[string]*schema.Schema{
-			"id": &schema.Schema{
+			"id": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"vid": &schema.Schema{
+			"vid": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"domain": &schema.Schema{
+			"domain": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"comment": &schema.Schema{
+			"comment": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"description": &schema.Schema{
+			"description": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},

@@ -2,12 +2,10 @@ package provider
 
 import (
 	"context"
-	"regexp"
 	"strconv"
 
 	circleclient "terraform-provider-circle3/client"
 
-	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -19,89 +17,60 @@ func resourceCDisk() *schema.Resource {
 		UpdateContext: resourceCDiskUpdate,
 		DeleteContext: resourceCDiskDelete,
 		Schema: map[string]*schema.Schema{
-			"id": &schema.Schema{
+			"id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"size": &schema.Schema{
+			"size": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"filename": &schema.Schema{
+			"filename": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"datastore": &schema.Schema{
+			"datastore": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"type": &schema.Schema{
+			"type": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"bus": &schema.Schema{
+			"bus": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"base": &schema.Schema{
+			"base": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"dev_num": &schema.Schema{
+			"dev_num": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"destroyed": &schema.Schema{
+			"destroyed": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"ci_disk": &schema.Schema{
+			"ci_disk": {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
-			"is_ready": &schema.Schema{
+			"is_ready": {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"size_format": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
-				ValidateDiagFunc: func(v interface{}, p cty.Path) diag.Diagnostics {
-					error_msg := diag.Diagnostic{
-						Severity: diag.Error,
-						Summary:  "Use this format: [positive integer][size unit], example: 10GB (units: GB, Gi, MB, Mi, KB, Ki)",
-						Detail:   "",
-					}
-					value := v.(string)
-					re := regexp.MustCompile(`(?P<size>\d*)\s*(?P<unit>\w*)`)
-					matches := re.FindAllStringSubmatch(value, 1)
-					var units = [...]string{"GB", "Gi", "MB", "Mi", "KB", "Ki"}
-					var diags diag.Diagnostics
-
-					size, err := strconv.Atoi(matches[0][1])
-					if err != nil {
-						diags = append(diags, error_msg)
-						return diags
-					}
-
-					if size <= 0 {
-						diags = append(diags, error_msg)
-						return diags
-					}
-
-					for _, e := range units {
-						if e == matches[0][2] {
-							return diags
-						}
-					}
-					return append(diags, error_msg)
-				},
+			"size_format": {
+				Type:             schema.TypeString,
+				Required:         true,
+				ValidateDiagFunc: ValidateSize,
 			},
-			"vm": &schema.Schema{
+			"vm": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},

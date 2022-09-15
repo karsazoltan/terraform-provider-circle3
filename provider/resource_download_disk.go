@@ -20,64 +20,64 @@ func resourceDDisk() *schema.Resource {
 		UpdateContext: resourceDDiskUpdate,
 		DeleteContext: resourceDDiskDelete,
 		Schema: map[string]*schema.Schema{
-			"id": &schema.Schema{
+			"id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"size": &schema.Schema{
+			"size": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"filename": &schema.Schema{
+			"filename": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"datastore": &schema.Schema{
+			"datastore": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"type": &schema.Schema{
+			"type": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"bus": &schema.Schema{
+			"bus": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"base": &schema.Schema{
+			"base": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"dev_num": &schema.Schema{
+			"dev_num": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"destroyed": &schema.Schema{
+			"destroyed": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"ci_disk": &schema.Schema{
+			"ci_disk": {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
-			"is_ready": &schema.Schema{
+			"is_ready": {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
-			"checksum": &schema.Schema{
+			"checksum": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"url": &schema.Schema{
+			"url": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"vm": &schema.Schema{
+			"vm": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
