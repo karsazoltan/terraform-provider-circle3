@@ -98,3 +98,23 @@ func (c *Client) DeleteDisk(instance_id int, disk_id int) error {
 	_, err = c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%v/destroydisk/", instance_id), "DELETE", *bytes.NewBuffer(json), 204)
 	return err
 }
+
+func (c *Client) AddNewPersistentDiskToVM(vm_id int, disk_id int) (*Disk, error) {
+	reqstruct := struct {
+		Disk int `json:"disk"`
+	}{Disk: disk_id}
+	data, err := json.Marshal(reqstruct)
+	if err != nil {
+		return nil, err
+	}
+	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/%v/addpersistent/", vm_id), "POST", *bytes.NewBuffer(data), 200)
+	if err != nil {
+		return nil, err
+	}
+	ret := Disk{}
+	err = json.NewDecoder(body).Decode(&ret)
+	if err != nil {
+		return nil, err
+	}
+	return &ret, nil
+}

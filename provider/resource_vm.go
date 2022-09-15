@@ -153,8 +153,8 @@ func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 	if d.Get("vlans") != nil {
 		resource_vlans := d.Get("vlans").([]interface{})
 		vlans := make([]int, len(resource_vlans))
-		for _, e := range resource_vlans {
-			vlans = append(vlans, e.(int))
+		for i, e := range resource_vlans {
+			vlans[i] = e.(int)
 		}
 		vmrest.Vlans = vlans
 	}
@@ -227,6 +227,36 @@ func resourceVMUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 		} else {
 			return diag.FromErr(errors.New("VM state is incorrect for change resources"))
 		}
+	}
+
+	if d.HasChange("disks") {
+		old, new := d.GetChange("disks")
+		old_disks := old.([]interface{})
+		new_disks := new.([]interface{})
+
+		olds_int := make([]int, 0)
+		news_int := make([]int, 0)
+		for _, n := range new_disks {
+			news_int = append(news_int, n.(int))
+		}
+		for _, n := range old_disks {
+			olds_int = append(olds_int, n.(int))
+		}
+
+		new_elements := make([]int, 0)
+		deleted_elements := make([]int, 0)
+
+		for _, n := range news_int {
+			if !contains(olds_int, n) {
+				new_elements = append(new_elements, n)
+			}
+		}
+		for _, n := range olds_int {
+			if !contains(news_int, n) {
+				deleted_elements = append(deleted_elements, n)
+			}
+		}
+
 	}
 
 	return resourceVMRead(ctx, d, m)
