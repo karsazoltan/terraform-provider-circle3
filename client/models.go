@@ -129,10 +129,11 @@ type InstanceActivities struct {
 	ResultData    struct {
 		AdminTextTemplate string `json:"admin_text_template"`
 		Params            struct {
-			Checksum string `json:"checksum"`
-			DiskID   int    `json:"disk_id"`
-			DiskSize int    `json:"disk_size"`
-			URL      string `json:"url"`
+			Checksum   string `json:"checksum,omitempty"`
+			DiskID     int    `json:"disk_id,omitempty"`
+			DiskSize   int    `json:"disk_size,omitempty"`
+			URL        string `json:"url,omitempty"`
+			TemplateID int    `json:"template_id,omitempty"`
 		} `json:"params,omitempty"`
 		UserTextTemplate string `json:"user_text_template"`
 	} `json:"result_data,omitempty"`

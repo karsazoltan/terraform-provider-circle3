@@ -31,6 +31,7 @@ func Provider() *schema.Provider {
 			"circle3_cdisk":           resourceCDisk(),
 			"circle3_volume_create":   resourcePersistentCDisk(),
 			"circle3_volume_download": resourcePersistentDDisk(),
+			"circle3_templat":         resourceTemplate(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"circle3_leases":          dataSourceLeases(),
