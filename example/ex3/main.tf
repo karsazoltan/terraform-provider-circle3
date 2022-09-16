@@ -10,7 +10,7 @@ terraform {
 provider "circle3" {
   address = "https://cloud3.fured.cloud.bme.hu"
   port    = 443
-  token   = "870d52e79fef266daebd1e6f781fe2c2422fde4a"
+  // export CIRCLE3_TOKEN="secret-key"
 }
 
 data "circle3_lease_byname" "labor_lease" {
@@ -47,4 +47,3 @@ resource "circle3_vm" "basic" {
   disks = [circle3_volume_download.ubuntu18.id]
   vlans = [data.circle3_vlan_byname.default_vlan.vid]
 }
-

@@ -12,7 +12,7 @@ import (
 
 func dataSourceGroupByName() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceUserByNameRead,
+		ReadContext: dataSourceGroupByNameRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:     schema.TypeInt,

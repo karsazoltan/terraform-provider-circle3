@@ -20,7 +20,7 @@ func (c *Client) GetAllUsers() ([]User, error) {
 }
 
 func (c *Client) GetUserByName(name string) (*User, error) {
-	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/user?name=%s", name), "GET", bytes.Buffer{}, 200)
+	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/user?username=%s", name), "GET", bytes.Buffer{}, 200)
 	if err != nil {
 		return nil, err
 	}
