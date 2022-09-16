@@ -22,7 +22,7 @@ func Provider() *schema.Provider {
 			"token": {
 				Type:        schema.TypeString,
 				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("SERVICE_TOKEN", ""),
+				DefaultFunc: schema.EnvDefaultFunc("CIRCLE3_TOKEN", ""),
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
@@ -33,8 +33,12 @@ func Provider() *schema.Provider {
 			"circle3_volume_download": resourcePersistentDDisk(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"circle3_leases":       dataSourceLeases(),
-			"circle3_lease_byname": dataSourceLeasesByName(),
+			"circle3_leases":          dataSourceLeases(),
+			"circle3_lease_byname":    dataSourceLeasesByName(),
+			"circle3_vlans":           dataSourceVlans(),
+			"circle3_vlan_byname":     dataSourceVlanByName(),
+			"circle3_user_byusername": dataSourceUserByUsername(),
+			"circle3_group_byname":    dataSourceGroupByName(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

@@ -29,7 +29,6 @@ func resourceVM() *schema.Resource {
 			"status": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Computed: true,
 			},
 			"node": {
 				Type:     schema.TypeInt,
@@ -131,6 +130,7 @@ func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 
 	empty_req := []string{}
 	vmrest := circleclient.VM{
+		Status:       d.Get("status").(string),
 		Owner:        d.Get("owner").(int),
 		Name:         d.Get("name").(string),
 		Description:  d.Get("description").(string),

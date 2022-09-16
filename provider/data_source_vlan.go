@@ -96,7 +96,7 @@ func dataSourceVlanByName() *schema.Resource {
 			},
 			"name": {
 				Type:     schema.TypeString,
-				Computed: true,
+				Required: true,
 			},
 			"vid": {
 				Type:     schema.TypeInt,

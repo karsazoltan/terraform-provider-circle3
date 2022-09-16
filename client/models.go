@@ -156,3 +156,33 @@ type StorageActivity struct {
 	TaskUuid   string    `json:"task_uuid"`
 	User       int       `json:"user"`
 }
+
+type User struct {
+	Email       string `json:"email"`
+	FirstName   string `json:"first_name"`
+	Groups      []int  `json:"groups"`
+	ID          int    `json:"id"`
+	IsStaff     bool   `json:"is_staff"`
+	IsSuperuser bool   `json:"is_superuser"`
+	LastName    string `json:"last_name"`
+	Username    string `json:"username"`
+}
+
+type Group struct {
+	ID      int    `json:"id"`
+	Name    string `json:"name"`
+	UserSet []int  `json:"user_set"`
+}
+
+type TemplateCreating struct {
+	Admin      int    `json:"admin,omitempty"`
+	Amount     int    `json:"amount,omitempty"`
+	MaxRamSize int    `json:"max_ram_size,omitempty"`
+	Name       string `json:"name"`
+	NumCores   int    `json:"num_cores,omitempty"`
+	Operator   int    `json:"operator,omitempty"`
+	Priority   int    `json:"priority,omitempty"`
+	RamSize    int    `json:"ram_size,omitempty"`
+	Template   int    `json:"template"`
+	Users      []int  `json:"users,omitempty"`
+}
