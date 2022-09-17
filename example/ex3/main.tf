@@ -27,7 +27,7 @@ resource "circle3_volume_download" "ubuntu18" {
 }
 
 resource "circle3_vm" "basic" {
-  status        = "SUSPENDED"
+  status        = "STOPPED"
   owner         = 1
   name          = "terraform"
   access_method = "ssh"

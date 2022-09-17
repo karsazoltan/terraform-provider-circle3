@@ -88,7 +88,7 @@ func resourcePersistentDDiskCreate(ctx context.Context, d *schema.ResourceData, 
 		Url:  d.Get("url").(string),
 		Name: d.Get("name").(string),
 	}
-
+	tflog.Info(ctx, "Create persistent disk (download from url)")
 	activity, err := c.CreatePersistentDDisk(vmrest)
 
 	if err != nil {
@@ -114,7 +114,7 @@ func resourcePersistentDDiskCreate(ctx context.Context, d *schema.ResourceData, 
 func resourcePersistentDDiskRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
-
+	tflog.Info(ctx, "Read remote host: persistent ddisk")
 	diskID, err := strconv.Atoi(d.Id())
 	if err != nil {
 		return diag.FromErr(err)
@@ -150,7 +150,7 @@ func resourcePersistentDDiskDelete(ctx context.Context, d *schema.ResourceData, 
 	if err != nil {
 		return diag.FromErr(err)
 	}
-
+	tflog.Info(ctx, "Delete persistent disk")
 	err = c.DeletePersistentDisk(diskid)
 	if err != nil {
 		return diag.FromErr(err)

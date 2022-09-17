@@ -26,6 +26,7 @@ func resourceTemplateCreate(ctx context.Context, d *schema.ResourceData, m inter
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 
+	tflog.Info(ctx, "Create template from vm")
 	activity, err := c.CreateTemplateFromVM(d.Get("fromvm").(int), d.Get("name").(string))
 
 	if err != nil {
@@ -56,6 +57,7 @@ func resourceTemplateRead(ctx context.Context, d *schema.ResourceData, m interfa
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	tflog.Info(ctx, "Get template data from remote host")
 	template, err := c.GetTemplate(TemplateID)
 	if err != nil {
 		return diag.FromErr(err)
@@ -84,6 +86,7 @@ func resourceTemplateRead(ctx context.Context, d *schema.ResourceData, m interfa
 }
 
 func resourceTemplateUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	// TODO: update
 	return resourceTemplateRead(ctx, d, m)
 }
 
@@ -91,13 +94,12 @@ func resourceTemplateDelete(ctx context.Context, d *schema.ResourceData, m inter
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 
-	diskid, err := strconv.Atoi(d.Id())
+	template_id, err := strconv.Atoi(d.Id())
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	vmid := d.Get("vm").(int)
-
-	err = c.DeleteDisk(vmid, diskid)
+	tflog.Info(ctx, "Delete template")
+	err = c.DeleteTemplate(template_id)
 	if err != nil {
 		return diag.FromErr(err)
 	}

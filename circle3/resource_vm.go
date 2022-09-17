@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 
 	circleclient "terraform-provider-circle3/client"
@@ -32,7 +33,7 @@ func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 func resourceBaseVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
-
+	tflog.Info(ctx, "Create base vm")
 	empty_req := []string{}
 	vmrest := circleclient.VM{
 		Status:       d.Get("status").(string),
@@ -88,7 +89,7 @@ func resourceVMfromTemplateCreate(ctx context.Context, d *schema.ResourceData, m
 
 	template_id := d.Get("from_template").(int)
 	name := d.Get("name").(string)
-
+	tflog.Info(ctx, "Create vm from template")
 	newvm, err := c.CreateVMfromTemplate(template_id, name)
 	if err != nil {
 		return diag.FromErr(err)
@@ -106,6 +107,7 @@ func resourceVMRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	tflog.Info(ctx, "Get VM from remote host")
 	vm, err := c.GetVM(vmid)
 	if err != nil {
 		return diag.FromErr(err)
@@ -126,26 +128,31 @@ func resourceVMUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	tflog.Info(ctx, "Get VM from remote host")
 	vm_remote, err := c.GetVM(vmid)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
 	if d.HasChange("lease") {
+		tflog.Info(ctx, "Update lease")
 		c.UpdateVMLease(vmid, d.Get("lease").(int))
 	}
 
-	if d.HasChange("state") {
-		old, new := d.GetChange("state")
+	if d.HasChange("status") {
+		old, new := d.GetChange("status")
 		if old.(string) != vm_remote.Status {
 			tflog.Warn(ctx, "Remote vm status and local state is inconsistent!")
 			c.UpdateVMState(vmid, vm_remote.Status, new.(string))
+		} else {
+			tflog.Info(ctx, fmt.Sprintf("Update vm status: %s -> %s", old.(string), new.(string)))
+			c.UpdateVMState(vmid, old.(string), new.(string))
 		}
-		c.UpdateVMState(vmid, old.(string), new.(string))
 	}
 
 	if d.HasChange("num_cores") || d.HasChange("ram_size") || d.HasChange("max_ram_size") || d.HasChange("priority") {
 		if d.Get("state") == "STOPPED" {
+			tflog.Info(ctx, "Update vm resources")
 			update := circleclient.VMResource{
 				MaxRamSize: d.Get("max_ram_size").(int),
 				RamSize:    d.Get("ram_size").(int),
@@ -175,12 +182,14 @@ func resourceVMUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 		for _, n := range news_int {
 			// new disks
 			if !contains(olds_int, n) {
+				tflog.Info(ctx, fmt.Sprintf("Add persistent disk (%v) to vm", n))
 				c.AddNewPersistentDiskToVM(vmid, n)
 			}
 		}
 		for _, n := range olds_int {
 			// deleted disks
 			if !contains(news_int, n) {
+				tflog.Info(ctx, fmt.Sprintf("Delete persistent disk (%v) from vm", n))
 				c.DeleteDisk(vmid, n)
 			}
 		}
@@ -197,7 +206,7 @@ func resourceVMDelete(ctx context.Context, d *schema.ResourceData, m interface{}
 	if err != nil {
 		return diag.FromErr(err)
 	}
-
+	tflog.Info(ctx, fmt.Sprintf("Delete vm (%v)", vmid))
 	err = c.DeleteVM(vmid)
 	if err != nil {
 		return diag.FromErr(err)

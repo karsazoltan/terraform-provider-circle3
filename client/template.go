@@ -51,3 +51,8 @@ func (c *Client) CreateTemplateFromVM(vmid int, name string) (*InstanceActivitie
 	}
 	return &ret, nil
 }
+
+func (c *Client) DeleteTemplate(id int) error {
+	_, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/template/%v/", id), "DELETE", bytes.Buffer{}, 204)
+	return err
+}
