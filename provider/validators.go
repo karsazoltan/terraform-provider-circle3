@@ -38,3 +38,43 @@ func ValidateSize(v interface{}, p cty.Path) diag.Diagnostics {
 	}
 	return append(diags, error_msg)
 }
+
+func ValidatePositiveNumber(v interface{}, p cty.Path) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	number := v.(int)
+	if number <= 0 {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "Value must be a positive integer",
+			Detail:   "",
+		})
+	}
+
+	return diags
+}
+
+func CheckPowerOfTwo(n int) int {
+	if n == 0 {
+		return 1
+	}
+	return n & (n - 1)
+}
+
+func ValidateRamNumber(v interface{}, p cty.Path) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	ValidatePositiveNumber(v, p)
+	number := v.(int)
+
+	if CheckPowerOfTwo(number) != 0 {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "Value must be power of 2",
+			Detail:   "",
+		})
+		return diags
+	}
+
+	return diags
+}

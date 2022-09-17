@@ -18,87 +18,7 @@ func resourceTemplate() *schema.Resource {
 		ReadContext:   resourceTemplateRead,
 		UpdateContext: resourceTemplateUpdate,
 		DeleteContext: resourceTemplateDelete,
-		Schema: map[string]*schema.Schema{
-			"id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"fromvm": {
-				Type:     schema.TypeInt,
-				Required: true,
-			},
-			"name": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"owner": {
-				Type:     schema.TypeInt,
-				Optional: true,
-			},
-			"access_method": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"description": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"boot_menu": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"lease": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
-			"cloud_init": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"ci_meta_data": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"ci_user_data": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"system": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"has_agent": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"num_cores": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
-			"ram_size": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
-			"max_ram_size": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
-			"arch": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"priority": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
-			"disks": {
-				Type: schema.TypeList,
-				Elem: &schema.Schema{
-					Type: schema.TypeInt,
-				},
-				Computed: true,
-			},
-		},
+		Schema:        templateSchema(),
 	}
 }
 
@@ -118,7 +38,7 @@ func resourceTemplateCreate(ctx context.Context, d *schema.ResourceData, m inter
 		if err != nil {
 			return diag.FromErr(err)
 		}
-		tflog.Info(ctx, fmt.Sprintf("Downloading (%v) ... ", activity.GetPercentage))
+		tflog.Info(ctx, fmt.Sprintf("Creating (%v) ... ", activity.GetPercentage))
 	}
 
 	d.SetId(strconv.Itoa(activity.ResultData.Params.TemplateID))
