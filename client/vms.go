@@ -120,3 +120,44 @@ func (c *Client) CreateVM(vm VM) (*VM, error) {
 	}
 	return &retvm, nil
 }
+
+func (c *Client) CreateVMfromTemplate(template_id int, name string) (*VM, error) {
+	template := struct {
+		TemplateID int    `json:"template"`
+		Name       string `json:"name"`
+	}{TemplateID: template_id, Name: name}
+	req, err := json.Marshal(template)
+	if err != nil {
+		return nil, err
+	}
+	body, err := c.httpRequest("dashboard/acpi/ft/", "POST", *bytes.NewBuffer(req), 201)
+	if err != nil {
+		return nil, err
+	}
+	retvm := VM{}
+	err = json.NewDecoder(body).Decode(&retvm)
+	if err != nil {
+		return nil, err
+	}
+	return &retvm, nil
+}
+
+func (c *Client) CreateVMfromTemplateforUsers(template_id int, users []int) (*VM, error) {
+	template := struct {
+		TemplateID int `json:"template"`
+	}{TemplateID: template_id}
+	req, err := json.Marshal(template)
+	if err != nil {
+		return nil, err
+	}
+	body, err := c.httpRequest("dashboard/acpi/ft/", "POST", *bytes.NewBuffer(req), 201)
+	if err != nil {
+		return nil, err
+	}
+	retvm := VM{}
+	err = json.NewDecoder(body).Decode(&retvm)
+	if err != nil {
+		return nil, err
+	}
+	return &retvm, nil
+}

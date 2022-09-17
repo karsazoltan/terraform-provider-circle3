@@ -36,65 +36,65 @@ func vmSchema() map[string]*schema.Schema {
 		},
 		"owner": {
 			Type:     schema.TypeInt,
-			Required: true,
+			Optional: true,
 		},
 		"access_method": {
 			Type:     schema.TypeString,
-			Required: true,
+			Optional: true,
 		},
 		"description": {
 			Type:     schema.TypeString,
-			Required: true,
+			Optional: true,
 		},
 		"boot_menu": {
 			Type:     schema.TypeBool,
-			Required: true,
+			Optional: true,
 		},
 		"lease": {
 			Type:     schema.TypeInt,
-			Required: true,
+			Optional: true,
 		},
 		"cloud_init": {
 			Type:     schema.TypeBool,
-			Required: true,
+			Optional: true,
 		},
 		"ci_meta_data": {
 			Type:     schema.TypeString,
-			Required: true,
+			Optional: true,
 		},
 		"ci_user_data": {
 			Type:     schema.TypeString,
-			Required: true,
+			Optional: true,
 		},
 		"system": {
 			Type:     schema.TypeString,
-			Required: true,
+			Optional: true,
 		},
 		"has_agent": {
 			Type:     schema.TypeBool,
-			Required: true,
+			Optional: true,
 		},
 		"num_cores": {
 			Type:     schema.TypeInt,
-			Required: true,
+			Optional: true,
 		},
 		"ram_size": {
 			Type:             schema.TypeInt,
-			Required:         true,
+			Optional:         true,
 			ValidateDiagFunc: ValidateRamNumber,
 		},
 		"max_ram_size": {
 			Type:             schema.TypeInt,
-			Required:         true,
+			Optional:         true,
 			ValidateDiagFunc: ValidateRamNumber,
 		},
 		"arch": {
 			Type:     schema.TypeString,
-			Required: true,
+			Optional: true,
 		},
 		"priority": {
 			Type:             schema.TypeInt,
-			Required:         true,
+			Optional:         true,
 			ValidateDiagFunc: ValidatePositiveNumber,
 		},
 		"vlans": {
@@ -109,6 +109,10 @@ func vmSchema() map[string]*schema.Schema {
 			Elem: &schema.Schema{
 				Type: schema.TypeInt,
 			},
+			Optional: true,
+		},
+		"from_template": {
+			Type:     schema.TypeInt,
 			Optional: true,
 		},
 	}

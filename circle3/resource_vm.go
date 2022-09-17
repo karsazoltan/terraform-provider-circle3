@@ -22,6 +22,13 @@ func resourceVM() *schema.Resource {
 }
 
 func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	if d.Get("from_template") != nil {
+		return resourceBaseVMCreate(ctx, d, m)
+	}
+	return resourceVMfromTemplateCreate(ctx, d, m)
+}
+
+func resourceBaseVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 
@@ -66,6 +73,22 @@ func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 	}
 
 	newvm, err := c.CreateVM(vmrest)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	d.SetId(strconv.Itoa(newvm.ID))
+
+	return diags
+}
+
+func resourceVMfromTemplateCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	c := m.(*circleclient.Client)
+	var diags diag.Diagnostics
+
+	template_id := d.Get("from_template").(int)
+	name := d.Get("name").(string)
+
+	newvm, err := c.CreateVMfromTemplate(template_id, name)
 	if err != nil {
 		return diag.FromErr(err)
 	}
