@@ -27,7 +27,7 @@ resource "circle3_volume_download" "ubuntu18" {
 }
 
 resource "circle3_vm" "basic" {
-  status        = "RUNNING"
+  status        = "SUSPENDED"
   owner         = 1
   name          = "terraform"
   access_method = "ssh"
@@ -40,9 +40,9 @@ resource "circle3_vm" "basic" {
   system        = "ubuntu 18.04"
   has_agent     = false
   num_cores     = 2
-  ram_size      = 128
+  ram_size      = 256
   max_ram_size  = 256
-  priority      = 30
+  priority      = 80
   arch          = "x86_64"
   disks = [circle3_volume_download.ubuntu18.id]
   vlans = [data.circle3_vlan_byname.default_vlan.vid]

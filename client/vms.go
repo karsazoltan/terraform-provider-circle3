@@ -54,7 +54,7 @@ func (c *Client) UpdateVMLease(id int, lease_new int) error {
 }
 
 func (c *Client) DeployVM(id int) error {
-	_, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%v/deploy/", id), "POST", bytes.Buffer{}, 200)
+	_, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%v/deploy/", id), "POST", bytes.Buffer{}, 201)
 	if err != nil {
 		return err
 	}
@@ -62,7 +62,7 @@ func (c *Client) DeployVM(id int) error {
 }
 
 func (c *Client) ShutdownVM(id int) error {
-	_, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%v/shutdown/", id), "POST", bytes.Buffer{}, 200)
+	_, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%v/shutdown/", id), "POST", bytes.Buffer{}, 201)
 	if err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func (c *Client) ShutdownVM(id int) error {
 }
 
 func (c *Client) SleepVM(id int) error {
-	_, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%v/sleep/", id), "POST", bytes.Buffer{}, 200)
+	_, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%v/sleep/", id), "POST", bytes.Buffer{}, 201)
 	if err != nil {
 		return err
 	}
@@ -78,7 +78,7 @@ func (c *Client) SleepVM(id int) error {
 }
 
 func (c *Client) WakeUpVM(id int) error {
-	_, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%v/wakeup/", id), "POST", bytes.Buffer{}, 200)
+	_, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%v/wakeup/", id), "POST", bytes.Buffer{}, 201)
 	if err != nil {
 		return err
 	}

@@ -7,6 +7,7 @@ import (
 
 	circleclient "terraform-provider-circle3/client"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -125,6 +126,10 @@ func resourceVMUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	vm_remote, err := c.GetVM(vmid)
+	if err != nil {
+		return diag.FromErr(err)
+	}
 
 	if d.HasChange("lease") {
 		c.UpdateVMLease(vmid, d.Get("lease").(int))
@@ -132,6 +137,10 @@ func resourceVMUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 
 	if d.HasChange("state") {
 		old, new := d.GetChange("state")
+		if old.(string) != vm_remote.Status {
+			tflog.Warn(ctx, "Remote vm status and local state is inconsistent!")
+			c.UpdateVMState(vmid, vm_remote.Status, new.(string))
+		}
 		c.UpdateVMState(vmid, old.(string), new.(string))
 	}
 
