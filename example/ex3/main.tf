@@ -27,7 +27,7 @@ resource "circle3_disk" "ubuntu18" {
 }
 
 resource "circle3_vm" "basic" {
-  status        = "STOPPED"
+  status        = "RUNNING"
   owner         = 1
   name          = "terraform"
   access_method = "ssh"

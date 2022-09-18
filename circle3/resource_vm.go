@@ -85,7 +85,6 @@ func resourceBaseVMCreate(ctx context.Context, d *schema.ResourceData, m interfa
 
 func resourceVMfromTemplateCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*circleclient.Client)
-	var diags diag.Diagnostics
 
 	template_id := d.Get("from_template").(int)
 	name := d.Get("name").(string)
@@ -95,8 +94,7 @@ func resourceVMfromTemplateCreate(ctx context.Context, d *schema.ResourceData, m
 		return diag.FromErr(err)
 	}
 	d.SetId(strconv.Itoa(newvm.ID))
-
-	return diags
+	return resourceVMRead(ctx, d, m)
 }
 
 func resourceVMRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -118,6 +116,18 @@ func resourceVMRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	d.Set("node", strconv.Itoa(vm.Node))
 	d.Set("ipv4", vm.Ipv4Addr)
 	d.Set("ipv6", vm.Ipv6Addr)
+	d.Set("disks", vm.Disks)
+	d.Set("vlans", vm.Vlans)
+	d.Set("cloud_init", vm.CloudInit)
+	d.Set("ci_user_data", vm.CiUserData)
+	d.Set("ci_meta_data", vm.CiMetaData)
+	d.Set("system", vm.System)
+	d.Set("has_agent", vm.HasAgent)
+	d.Set("num_cores", vm.NumCores)
+	d.Set("ram_size", vm.RamSize)
+	d.Set("max_ram_size", vm.MaxRamSize)
+	d.Set("arch", vm.Arch)
+	d.Set("priority", vm.Priority)
 
 	return diags
 }

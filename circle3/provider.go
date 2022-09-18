@@ -36,7 +36,7 @@ func Provider() *schema.Provider {
 			"circle3_vlans":           dataSourceVlans(),
 			"circle3_vlan_byname":     dataSourceVlanByName(),
 			"circle3_user_byusername": dataSourceUserByUsername(),
-			"circle3_group_byname":    dataSourceGroupByName(),
+			"circle3_group":           dataSourceGroup(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

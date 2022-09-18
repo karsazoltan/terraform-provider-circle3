@@ -31,3 +31,16 @@ func (c *Client) GetUserByName(name string) (*User, error) {
 	}
 	return &item, nil
 }
+
+func (c *Client) GetUserByID(id int) (*User, error) {
+	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/user/%v", id), "GET", bytes.Buffer{}, 200)
+	if err != nil {
+		return nil, err
+	}
+	item := User{}
+	err = json.NewDecoder(body).Decode(&item)
+	if err != nil {
+		return nil, err
+	}
+	return &item, nil
+}

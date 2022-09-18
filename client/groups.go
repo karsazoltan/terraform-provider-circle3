@@ -31,3 +31,16 @@ func (c *Client) GetGroupByName(name string) (*Group, error) {
 	}
 	return &item, nil
 }
+
+func (c *Client) GetGroupByID(id int) (*Group, error) {
+	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/group/%v", id), "GET", bytes.Buffer{}, 200)
+	if err != nil {
+		return nil, err
+	}
+	item := Group{}
+	err = json.NewDecoder(body).Decode(&item)
+	if err != nil {
+		return nil, err
+	}
+	return &item, nil
+}

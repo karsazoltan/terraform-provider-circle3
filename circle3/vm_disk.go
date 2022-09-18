@@ -66,6 +66,7 @@ func resourceCDiskRead(ctx context.Context, d *schema.ResourceData, m interface{
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	tflog.Info(ctx, "Read cdisk")
 	disk, err := c.GetDisk(diskID)
 	if err != nil {
 		return diag.FromErr(err)
@@ -98,7 +99,7 @@ func resourceCDiskDelete(ctx context.Context, d *schema.ResourceData, m interfac
 		return diag.FromErr(err)
 	}
 	vmid := d.Get("vm").(int)
-
+	tflog.Info(ctx, "Delete cdisk")
 	err = c.DeleteDisk(vmid, diskid)
 	if err != nil {
 		return diag.FromErr(err)
@@ -116,6 +117,7 @@ func resourceDDiskRead(ctx context.Context, d *schema.ResourceData, m interface{
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	tflog.Info(ctx, "Read ddisk")
 	disk, err := c.GetDisk(diskID)
 	if err != nil {
 		return diag.FromErr(err)
@@ -143,6 +145,7 @@ func resourceDDiskDelete(ctx context.Context, d *schema.ResourceData, m interfac
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 
+	tflog.Info(ctx, "Delete vm disk")
 	diskid, err := strconv.Atoi(d.Id())
 	if err != nil {
 		return diag.FromErr(err)

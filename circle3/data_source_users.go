@@ -20,7 +20,7 @@ func dataSourceUserByUsername() *schema.Resource {
 			},
 			"username": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 			},
 			"email": {
 				Type:     schema.TypeString,
@@ -57,18 +57,34 @@ func dataSourceUserByNameRead(ctx context.Context, d *schema.ResourceData, m int
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 
-	user, err := c.GetUserByName(d.Get("username").(string))
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	if _, ok := d.GetOk("username"); ok {
+		user, err := c.GetUserByName(d.Get("username").(string))
+		if err != nil {
+			return diag.FromErr(err)
+		}
 
-	d.SetId(strconv.Itoa(user.ID))
-	d.Set("email", user.Email)
-	d.Set("is_staff", user.IsStaff)
-	d.Set("is_superuser", user.IsSuperuser)
-	d.Set("first_name", user.FirstName)
-	d.Set("last_name", user.LastName)
-	d.Set("groups", user.Groups)
+		d.SetId(strconv.Itoa(user.ID))
+		d.Set("email", user.Email)
+		d.Set("is_staff", user.IsStaff)
+		d.Set("is_superuser", user.IsSuperuser)
+		d.Set("first_name", user.FirstName)
+		d.Set("last_name", user.LastName)
+		d.Set("groups", user.Groups)
+	} else if _, ok := d.GetOk("id"); ok {
+		id, err := strconv.Atoi(d.Id())
+		user, err := c.GetUserByID(id)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		d.SetId(strconv.Itoa(user.ID))
+		d.Set("username", user.Username)
+		d.Set("email", user.Email)
+		d.Set("is_staff", user.IsStaff)
+		d.Set("is_superuser", user.IsSuperuser)
+		d.Set("first_name", user.FirstName)
+		d.Set("last_name", user.LastName)
+		d.Set("groups", user.Groups)
+	}
 
 	return diags
 }

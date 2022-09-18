@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceGroupByName() *schema.Resource {
+func dataSourceGroup() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceGroupByNameRead,
 		Schema: map[string]*schema.Schema{
@@ -20,7 +20,7 @@ func dataSourceGroupByName() *schema.Resource {
 			},
 			"name": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 			},
 			"users": {
 				Type: schema.TypeList,
@@ -37,13 +37,27 @@ func dataSourceGroupByNameRead(ctx context.Context, d *schema.ResourceData, m in
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 
-	group, err := c.GetGroupByName(d.Get("name").(string))
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	if _, ok := d.GetOk("name"); ok {
+		group, err := c.GetGroupByName(d.Get("name").(string))
+		if err != nil {
+			return diag.FromErr(err)
+		}
 
-	d.SetId(strconv.Itoa(group.ID))
-	d.Set("users", group.UserSet)
+		d.SetId(strconv.Itoa(group.ID))
+		d.Set("users", group.UserSet)
+	} else if _, ok = d.GetOk("id"); ok {
+		id, err := strconv.Atoi(d.Id())
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		group, err := c.GetGroupByID(id)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		d.SetId(strconv.Itoa(group.ID))
+		d.Set("name", group.Name)
+		d.Set("users", group.UserSet)
+	}
 
 	return diags
 }
