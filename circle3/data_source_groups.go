@@ -6,13 +6,14 @@ import (
 
 	circleclient "terraform-provider-circle3/client"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceGroup() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceGroupByNameRead,
+		ReadContext: dataSourceGroupRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:     schema.TypeInt,
@@ -33,11 +34,12 @@ func dataSourceGroup() *schema.Resource {
 	}
 }
 
-func dataSourceGroupByNameRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func dataSourceGroupRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 
 	if _, ok := d.GetOk("name"); ok {
+		tflog.Info(ctx, "Get group by name")
 		group, err := c.GetGroupByName(d.Get("name").(string))
 		if err != nil {
 			return diag.FromErr(err)
@@ -46,6 +48,7 @@ func dataSourceGroupByNameRead(ctx context.Context, d *schema.ResourceData, m in
 		d.SetId(strconv.Itoa(group.ID))
 		d.Set("users", group.UserSet)
 	} else if _, ok = d.GetOk("id"); ok {
+		tflog.Info(ctx, "get group by id")
 		id, err := strconv.Atoi(d.Id())
 		if err != nil {
 			return diag.FromErr(err)

@@ -7,6 +7,7 @@ import (
 
 	circleclient "terraform-provider-circle3/client"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -103,14 +104,30 @@ func dataSourceLeasesByNameRead(ctx context.Context, d *schema.ResourceData, m i
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 
-	reqlease, err := c.GetLeasesByName(d.Get("name").(string))
-	if err != nil {
-		return diag.FromErr(err)
+	if _, ok := d.GetOk("name"); ok {
+		tflog.Info(ctx, "Get lease by name")
+		reqlease, err := c.GetLeasesByName(d.Get("name").(string))
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		d.SetId(strconv.Itoa(reqlease.ID))
+		d.Set("delete_interval_seconds", reqlease.Delete_interval_seconds)
+		d.Set("suspend_interval_seconds", reqlease.Suspend_interval_seconds)
+	} else if _, ok := d.GetOk("id"); ok {
+		tflog.Info(ctx, "Get lease by id")
+		id, err := strconv.Atoi(d.Id())
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		reqlease, err := c.GetLeasesByID(id)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		d.SetId(strconv.Itoa(reqlease.ID))
+		d.Set("delete_interval_seconds", reqlease.Delete_interval_seconds)
+		d.Set("suspend_interval_seconds", reqlease.Suspend_interval_seconds)
+		d.Set("name", reqlease.Name)
 	}
-
-	d.SetId(strconv.Itoa(reqlease.ID))
-	d.Set("delete_interval_seconds", reqlease.Delete_interval_seconds)
-	d.Set("suspend_interval_seconds", reqlease.Suspend_interval_seconds)
 
 	return diags
 }

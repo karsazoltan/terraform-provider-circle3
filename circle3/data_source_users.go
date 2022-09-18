@@ -6,6 +6,7 @@ import (
 
 	circleclient "terraform-provider-circle3/client"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -58,6 +59,7 @@ func dataSourceUserByNameRead(ctx context.Context, d *schema.ResourceData, m int
 	var diags diag.Diagnostics
 
 	if _, ok := d.GetOk("username"); ok {
+		tflog.Info(ctx, "Get user by username")
 		user, err := c.GetUserByName(d.Get("username").(string))
 		if err != nil {
 			return diag.FromErr(err)
@@ -71,6 +73,7 @@ func dataSourceUserByNameRead(ctx context.Context, d *schema.ResourceData, m int
 		d.Set("last_name", user.LastName)
 		d.Set("groups", user.Groups)
 	} else if _, ok := d.GetOk("id"); ok {
+		tflog.Info(ctx, "Get user by id")
 		id, err := strconv.Atoi(d.Id())
 		user, err := c.GetUserByID(id)
 		if err != nil {

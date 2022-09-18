@@ -7,6 +7,7 @@ import (
 
 	circleclient "terraform-provider-circle3/client"
 
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -122,16 +123,34 @@ func dataSourceVlanByNameRead(ctx context.Context, d *schema.ResourceData, m int
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 
-	reqlease, err := c.GetVlanByName(d.Get("name").(string))
-	if err != nil {
-		return diag.FromErr(err)
+	if _, ok := d.GetOk("name"); ok {
+		tflog.Info(ctx, "Get vlan by name")
+		reqvlan, err := c.GetVlanByName(d.Get("name").(string))
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		d.SetId(strconv.Itoa(reqvlan.ID))
+		d.Set("comment", reqvlan.Comment)
+		d.Set("description", reqvlan.Description)
+		d.Set("domain", reqvlan.Domain)
+		d.Set("vid", reqvlan.Vid)
+	} else if _, ok := d.GetOk("id"); ok {
+		tflog.Info(ctx, "Get vlan by id")
+		id, err := strconv.Atoi(d.Id())
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		reqvlan, err := c.GetVlanByID(id)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		d.SetId(strconv.Itoa(reqvlan.ID))
+		d.Set("comment", reqvlan.Comment)
+		d.Set("description", reqvlan.Description)
+		d.Set("domain", reqvlan.Domain)
+		d.Set("vid", reqvlan.Vid)
+		d.Set("name", reqvlan.Name)
 	}
-
-	d.SetId(strconv.Itoa(reqlease.ID))
-	d.Set("comment", reqlease.Comment)
-	d.Set("description", reqlease.Description)
-	d.Set("domain", reqlease.Domain)
-	d.Set("vid", reqlease.Vid)
 
 	return diags
 }
