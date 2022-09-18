@@ -201,3 +201,66 @@ func templateSchema() map[string]*schema.Schema {
 		},
 	}
 }
+
+func diskSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"id": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"size": {
+			Type:     schema.TypeInt,
+			Computed: true,
+		},
+		"filename": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"datastore": {
+			Type:     schema.TypeInt,
+			Computed: true,
+		},
+		"type": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"bus": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"base": {
+			Type:     schema.TypeInt,
+			Computed: true,
+		},
+		"dev_num": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"destroyed": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"ci_disk": {
+			Type:     schema.TypeBool,
+			Computed: true,
+		},
+		"is_ready": {
+			Type:     schema.TypeBool,
+			Computed: true,
+		},
+		"name": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"size_format": {
+			Type:     schema.TypeString,
+			Optional: true,
+			ForceNew: true,
+		},
+		"url": {
+			Type:     schema.TypeString,
+			Optional: true,
+			ForceNew: true,
+		},
+	}
+}

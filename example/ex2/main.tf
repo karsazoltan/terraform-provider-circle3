@@ -16,12 +16,12 @@ data "circle3_lease_byname" "labor_lease" {
   name = "lab"
 }
 
-resource "circle3_volume_create" "empty_disk" {
+resource "circle3_disk" "empty_disk" {
   size_format = "3Gi"
   name = "empty_disk"
 }
 
-resource "circle3_volume_download" "tiny_linux" {
+resource "circle3_disk" "tiny_linux" {
   name = "tinycore-linux"
   url = "http://tinycorelinux.net/13.x/x86/release/TinyCore-current.iso"
 }
@@ -44,8 +44,8 @@ resource "circle3_vm" "basic" {
   priority      = 30
   arch          = "x86_64"
   disks         = [ 
-    circle3_volume_create.empty_disk.id, 
-    circle3_volume_download.tiny_linux.id 
+    circle3_disk.empty_disk.id, 
+    circle3_disk.tiny_linux.id 
   ]
 }
 

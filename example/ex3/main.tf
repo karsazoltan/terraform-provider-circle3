@@ -21,7 +21,7 @@ data "circle3_vlan_byname" "default_vlan" {
   name = "vm"
 }
 
-resource "circle3_volume_download" "ubuntu18" {
+resource "circle3_disk" "ubuntu18" {
   name = "ubuntu18.04"
   url = "http://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img"
 }
@@ -44,6 +44,6 @@ resource "circle3_vm" "basic" {
   max_ram_size  = 256
   priority      = 80
   arch          = "x86_64"
-  disks = [circle3_volume_download.ubuntu18.id]
+  disks = [circle3_disk.ubuntu18.id]
   vlans = [data.circle3_vlan_byname.default_vlan.vid]
 }

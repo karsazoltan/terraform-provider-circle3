@@ -26,12 +26,9 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"circle3_vm":              resourceVM(),
-			"circle3_ddisk":           resourceDDisk(),
-			"circle3_cdisk":           resourceCDisk(),
-			"circle3_volume_create":   resourcePersistentCDisk(),
-			"circle3_volume_download": resourcePersistentDDisk(),
-			"circle3_templat":         resourceTemplate(),
+			"circle3_vm":       resourceVM(),
+			"circle3_disk":     resourceDisk(),
+			"circle3_template": resourceTemplate(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"circle3_leases":          dataSourceLeases(),
