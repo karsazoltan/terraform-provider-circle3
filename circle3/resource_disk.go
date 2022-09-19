@@ -34,7 +34,11 @@ func resourceDiskCreate(ctx context.Context, d *schema.ResourceData, m interface
 			return resourcePersistentCDiskCreate(ctx, d, m)
 		}
 	} else {
-		diags = append(diags)
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "One required field: url (download image from url) or size_format (empty disk)",
+			Detail:   "",
+		})
 	}
 
 	return diags

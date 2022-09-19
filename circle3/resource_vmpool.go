@@ -25,7 +25,7 @@ func resourceVMPool() *schema.Resource {
 
 func flattenVM(vms *[]circleclient.VM) []interface{} {
 	if vms != nil {
-		vmsi := make([]interface{}, len(*vms), len(*vms))
+		vmsi := make([]interface{}, len(*vms))
 
 		for i, vmitem := range *vms {
 			vm := make(map[string]interface{})
