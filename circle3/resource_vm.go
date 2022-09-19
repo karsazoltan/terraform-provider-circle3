@@ -24,10 +24,10 @@ func resourceVM() *schema.Resource {
 }
 
 func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	if d.Get("from_template") != nil {
-		return resourceBaseVMCreate(ctx, d, m)
+	if _, ok := d.GetOk("from_template"); ok {
+		return resourceVMfromTemplateCreate(ctx, d, m)
 	}
-	return resourceVMfromTemplateCreate(ctx, d, m)
+	return resourceBaseVMCreate(ctx, d, m)
 }
 
 func resourceBaseVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"net/url"
 )
 
 func (c *Client) GetTemplate(id int) (*Template, error) {
@@ -20,7 +21,7 @@ func (c *Client) GetTemplate(id int) (*Template, error) {
 }
 
 func (c *Client) GetTemplateByName(name string) (*Template, error) {
-	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/template?name=%s", name), "GET", bytes.Buffer{}, 200)
+	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/template?name=%s", url.QueryEscape(name)), "GET", bytes.Buffer{}, 200)
 	if err != nil {
 		return nil, err
 	}

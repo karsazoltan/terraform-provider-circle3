@@ -2,7 +2,7 @@ terraform {
   required_providers {
     circle3 = {
       version = "0.1"
-      source  = "hashicorp.com/edu/circle3"
+      source  = "bmeik/tf/circle3"
     }
   }
 }
@@ -14,10 +14,10 @@ provider "circle3" {
 }
 
 data "circle3_template" "basetemplate" {
-  
+  name = "ubuntu v1"
 }
 
-resource "circle3_vm" "from template terraform" {
+resource "circle3_vm" "from_template_tf" {
   name = "from template"
   from_template = data.circle3_template.basetemplate.id
 }

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"net/url"
 )
 
 func (c *Client) GetAllLeases() ([]Lease, error) {
@@ -20,7 +21,7 @@ func (c *Client) GetAllLeases() ([]Lease, error) {
 }
 
 func (c *Client) GetLeasesByName(name string) (*Lease, error) {
-	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/lease?name=%s", name), "GET", bytes.Buffer{}, 200)
+	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/lease?name=%s", url.QueryEscape(name)), "GET", bytes.Buffer{}, 200)
 	if err != nil {
 		return nil, err
 	}

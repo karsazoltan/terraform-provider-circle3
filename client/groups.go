@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"net/url"
 )
 
 func (c *Client) GetAllGroups() ([]Group, error) {
@@ -20,7 +21,7 @@ func (c *Client) GetAllGroups() ([]Group, error) {
 }
 
 func (c *Client) GetGroupByName(name string) (*Group, error) {
-	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/group?name=%s", name), "GET", bytes.Buffer{}, 200)
+	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/group?name=%s", url.QueryEscape(name)), "GET", bytes.Buffer{}, 200)
 	if err != nil {
 		return nil, err
 	}

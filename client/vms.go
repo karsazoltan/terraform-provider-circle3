@@ -144,12 +144,12 @@ func (c *Client) CreateVMfromTemplate(template_id int, name string) (*VM, error)
 	if err != nil {
 		return nil, err
 	}
-	retvm := VM{}
+	retvm := []VM{}
 	err = json.NewDecoder(body).Decode(&retvm)
 	if err != nil {
 		return nil, err
 	}
-	return &retvm, nil
+	return &retvm[0], nil
 }
 
 func (c *Client) CreateVMfromTemplateforUsers(template_id int, name string, users []int) ([]VM, error) {

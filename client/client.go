@@ -24,7 +24,7 @@ func NewClient(hostname string, port int, token string) *Client {
 		hostname:   hostname,
 		port:       port,
 		authToken:  token,
-		httpClient: &http.Client{Timeout: 30 * time.Second, Transport: transCfg},
+		httpClient: &http.Client{Timeout: 40 * time.Second, Transport: transCfg},
 	}
 }
 

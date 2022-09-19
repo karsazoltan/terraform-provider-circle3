@@ -12,9 +12,12 @@ import (
 )
 
 func dataSourceTemplate() *schema.Resource {
+	templateschema := templateSchema()
+	templateschema["fromvm"].Required = false
+	templateschema["fromvm"].Optional = true
 	return &schema.Resource{
 		ReadContext: dataSourceTemplateRead,
-		Schema:      templateSchema(),
+		Schema:      templateschema,
 	}
 }
 
@@ -27,6 +30,7 @@ func dataSourceTemplateRead(ctx context.Context, d *schema.ResourceData, m inter
 		if err != nil {
 			return diag.FromErr(err)
 		}
+		d.SetId(strconv.Itoa(template.ID))
 		d.Set("owner", template.Owner)
 		d.Set("description", template.Description)
 		d.Set("parent", template.Parent)

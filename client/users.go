@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"net/url"
 )
 
 func (c *Client) GetAllUsers() ([]User, error) {
@@ -19,8 +20,8 @@ func (c *Client) GetAllUsers() ([]User, error) {
 	return items, nil
 }
 
-func (c *Client) GetUserByName(name string) (*User, error) {
-	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/user?username=%s", name), "GET", bytes.Buffer{}, 200)
+func (c *Client) GetUserByName(username string) (*User, error) {
+	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/user?username=%s", url.QueryEscape(username)), "GET", bytes.Buffer{}, 200)
 	if err != nil {
 		return nil, err
 	}

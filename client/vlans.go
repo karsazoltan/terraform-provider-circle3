@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"net/url"
 )
 
 func (c *Client) GetAllVlans() ([]Vlan, error) {
@@ -20,7 +21,7 @@ func (c *Client) GetAllVlans() ([]Vlan, error) {
 }
 
 func (c *Client) GetVlanByName(name string) (*Vlan, error) {
-	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vlan?name=%s", name), "GET", bytes.Buffer{}, 200)
+	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vlan?name=%s", url.QueryEscape(name)), "GET", bytes.Buffer{}, 200)
 	if err != nil {
 		return nil, err
 	}
