@@ -264,3 +264,34 @@ func diskSchema() map[string]*schema.Schema {
 		},
 	}
 }
+
+func vmpoolSchema() map[string]*schema.Schema {
+	vms := vmSchema()
+	vms["name"].Required = false
+	return map[string]*schema.Schema{
+		"id": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"from_template": {
+			Type:     schema.TypeInt,
+			Required: true,
+		},
+		"name": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"users": {
+			Type: schema.TypeList,
+			Elem: &schema.Schema{
+				Type: schema.TypeInt,
+			},
+			Required: true,
+		},
+		"vms": {
+			Type:     schema.TypeList,
+			Elem:     vms,
+			Computed: true,
+		},
+	}
+}

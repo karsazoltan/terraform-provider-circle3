@@ -3,7 +3,7 @@
 # to generate, run: "go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs"
 page_title: "circle3 Provider"
 subcategory: ""
-description: |-
+description: |- Terraform provider for BME VIK CIRCLE3 cloudmanager (IaaS)
   
 ---
 
@@ -18,6 +18,6 @@ description: |-
 
 ### Optional
 
-- `address` (String)
-- `port` (Number)
-- `token` (String)
+- `address` (String) - circle3 server address (full)
+- `port` (Number)    - circle3 server port (default 443 over http)
+- `token` (String)   - IAC token for admin users

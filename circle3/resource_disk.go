@@ -56,7 +56,11 @@ func resourceDiskRead(ctx context.Context, d *schema.ResourceData, m interface{}
 			return resourcePersistentCDiskRead(ctx, d, m)
 		}
 	} else {
-		diags = append(diags)
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "One of size_format or url required",
+			Detail:   "",
+		})
 	}
 
 	return diags

@@ -87,7 +87,7 @@ func dataSourceVlansRead(ctx context.Context, d *schema.ResourceData, m interfac
 	return diags
 }
 
-func dataSourceVlanByName() *schema.Resource {
+func dataSourceVlan() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceVlanByNameRead,
 		Schema: map[string]*schema.Schema{

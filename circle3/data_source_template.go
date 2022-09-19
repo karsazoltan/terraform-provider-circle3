@@ -14,17 +14,7 @@ import (
 func dataSourceTemplate() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceTemplateRead,
-		Schema: map[string]*schema.Schema{
-			"id": {
-				Type:     schema.TypeInt,
-				Computed: true,
-			},
-			"name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			// TODO template schema merging
-		},
+		Schema:      templateSchema(),
 	}
 }
 
@@ -56,8 +46,11 @@ func dataSourceTemplateRead(ctx context.Context, d *schema.ResourceData, m inter
 		d.Set("priority", template.Priority)
 		d.Set("disks", template.Disks)
 	} else if _, ok := d.GetOk("id"); ok {
-		tflog.Info(ctx, "Get lease by id")
+		tflog.Info(ctx, "Get template by id")
 		TemplateID, err := strconv.Atoi(d.Id())
+		if err != nil {
+			return diag.FromErr(err)
+		}
 		template, err := c.GetTemplate(TemplateID)
 		if err != nil {
 			return diag.FromErr(err)
@@ -80,6 +73,12 @@ func dataSourceTemplateRead(ctx context.Context, d *schema.ResourceData, m inter
 		d.Set("arch", template.Arch)
 		d.Set("priority", template.Priority)
 		d.Set("disks", template.Disks)
+	} else {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "One required field: name or id",
+			Detail:   "",
+		})
 	}
 	return diags
 }

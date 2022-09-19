@@ -11,6 +11,16 @@ func (c *Client) DeleteVM(id int) error {
 	return err
 }
 
+func (c *Client) DeleteVMs(ids []int) error {
+	for _, id := range ids {
+		_, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%v/", id), "DELETE", bytes.Buffer{}, 204)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (c *Client) GetVM(id int) (*VM, error) {
 	body, err := c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%v", id), "GET", bytes.Buffer{}, 200)
 	if err != nil {
@@ -142,10 +152,12 @@ func (c *Client) CreateVMfromTemplate(template_id int, name string) (*VM, error)
 	return &retvm, nil
 }
 
-func (c *Client) CreateVMfromTemplateforUsers(template_id int, users []int) (*VM, error) {
+func (c *Client) CreateVMfromTemplateforUsers(template_id int, name string, users []int) ([]VM, error) {
 	template := struct {
-		TemplateID int `json:"template"`
-	}{TemplateID: template_id}
+		TemplateID int    `json:"template"`
+		Users      []int  `json:"users"`
+		Name       string `json:"name"`
+	}{TemplateID: template_id, Users: users, Name: name}
 	req, err := json.Marshal(template)
 	if err != nil {
 		return nil, err
@@ -154,10 +166,22 @@ func (c *Client) CreateVMfromTemplateforUsers(template_id int, users []int) (*VM
 	if err != nil {
 		return nil, err
 	}
-	retvm := VM{}
-	err = json.NewDecoder(body).Decode(&retvm)
+	retvms := []VM{}
+	err = json.NewDecoder(body).Decode(&retvms)
 	if err != nil {
 		return nil, err
 	}
-	return &retvm, nil
+	return retvms, nil
+}
+
+func (c *Client) GetVMPool(ids []int) ([]VM, error) {
+	vms := make([]VM, 0)
+	for _, e := range ids {
+		vm, err := c.GetVM(e)
+		if err != nil {
+			return nil, err
+		}
+		vms = append(vms, *vm)
+	}
+	return vms, nil
 }

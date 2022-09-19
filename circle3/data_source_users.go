@@ -11,9 +11,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceUserByUsername() *schema.Resource {
+func dataSourceUser() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceUserByNameRead,
+		ReadContext: dataSourceUserRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:     schema.TypeInt,
@@ -54,7 +54,7 @@ func dataSourceUserByUsername() *schema.Resource {
 	}
 }
 
-func dataSourceUserByNameRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func dataSourceUserRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 
@@ -75,6 +75,9 @@ func dataSourceUserByNameRead(ctx context.Context, d *schema.ResourceData, m int
 	} else if _, ok := d.GetOk("id"); ok {
 		tflog.Info(ctx, "Get user by id")
 		id, err := strconv.Atoi(d.Id())
+		if err != nil {
+			return diag.FromErr(err)
+		}
 		user, err := c.GetUserByID(id)
 		if err != nil {
 			return diag.FromErr(err)
@@ -87,6 +90,12 @@ func dataSourceUserByNameRead(ctx context.Context, d *schema.ResourceData, m int
 		d.Set("first_name", user.FirstName)
 		d.Set("last_name", user.LastName)
 		d.Set("groups", user.Groups)
+	} else {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "One required field: username or id",
+			Detail:   "",
+		})
 	}
 
 	return diags
