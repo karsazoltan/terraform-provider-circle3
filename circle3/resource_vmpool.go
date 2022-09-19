@@ -30,11 +30,11 @@ func flattenVM(vms *[]circleclient.VM) []interface{} {
 		for i, vmitem := range *vms {
 			vm := make(map[string]interface{})
 
-			vm["id"] = vmitem.ID
+			vm["id"] = strconv.Itoa(vmitem.ID)
 			vm["name"] = vmitem.Name
 			vm["pw"] = vmitem.Pw
 			vm["status"] = vmitem.Status
-			vm["node"] = strconv.Itoa(vmitem.Node)
+			vm["node"] = vmitem.Node
 			vm["ipv4"] = vmitem.Ipv4Addr
 			vm["ipv6"] = vmitem.Ipv6Addr
 			vm["disks"] = vmitem.Disks
@@ -60,7 +60,7 @@ func flattenVM(vms *[]circleclient.VM) []interface{} {
 func resourceVMPoolCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
-	tflog.Info(ctx, "Create base vm")
+	tflog.Info(ctx, "Create vmpool")
 
 	from_template := d.Get("from_template").(int)
 	name := d.Get("name").(string)
@@ -98,19 +98,22 @@ func resourceVMPoolDelete(ctx context.Context, d *schema.ResourceData, m interfa
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 
-	vmid, err := strconv.Atoi(d.Id())
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	tflog.Info(ctx, fmt.Sprintf("Delete vm (%v)", vmid))
 	if d.Get("vms") != nil {
-		resource_vms := d.Get("vms").([]map[string]interface{})
+		resource_vms := d.Get("vms").([]interface{})
 		for _, e := range resource_vms {
-			c.DeleteVM(e["id"].(int))
+			item := e.(map[string]interface{})
+			id, err := strconv.Atoi(item["id"].(string))
+			if err != nil {
+				return diag.FromErr(err)
+			}
+			if err := c.DeleteVM(id); err != nil {
+				diags = append(diags, diag.Diagnostic{
+					Severity: diag.Error,
+					Summary:  fmt.Sprintf("Problems with a VM (id %v)", id),
+					Detail:   err.Error(),
+				})
+			}
 		}
-	}
-	if err != nil {
-		return diag.FromErr(err)
 	}
 	d.SetId("")
 

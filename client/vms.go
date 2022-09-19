@@ -162,7 +162,7 @@ func (c *Client) CreateVMfromTemplateforUsers(template_id int, name string, user
 	if err != nil {
 		return nil, err
 	}
-	body, err := c.httpRequest("dashboard/acpi/ft/", "POST", *bytes.NewBuffer(req), 201)
+	body, err := c.httpRequest("dashboard/acpi/ftusersid/", "POST", *bytes.NewBuffer(req), 201)
 	if err != nil {
 		return nil, err
 	}
