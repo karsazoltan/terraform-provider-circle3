@@ -2,7 +2,7 @@ terraform {
   required_providers {
     circle3 = {
       version = "0.1"
-      source  = "hashicorp.com/edu/circle3"
+      source  = "bmeik/tf/circle3"
     }
   }
 }
@@ -12,7 +12,7 @@ provider "circle3" {
   // export CIRCLE3_TOKEN="secret-key"
 }
 
-data "circle3_lease_byname" "labor_lease" {
+data "circle3_lease" "labor_lease" {
   name = "lab"
 }
 
@@ -22,7 +22,7 @@ resource "circle3_vm" "basic" {
   access_method = "ssh"
   description   = "valami"
   boot_menu     = true
-  lease         = data.circle3_lease_byname.labor_lease.id
+  lease         = data.circle3_lease.labor_lease.id
   cloud_init    = true
   ci_meta_data  = "valami"
   ci_user_data  = "msk valami"

@@ -268,6 +268,7 @@ func diskSchema() map[string]*schema.Schema {
 func vmpoolSchema() map[string]*schema.Schema {
 	vms := vmSchema()
 	vms["name"].Required = false
+	vms["name"].Computed = true
 	return map[string]*schema.Schema{
 		"id": {
 			Type:     schema.TypeString,
@@ -290,7 +291,7 @@ func vmpoolSchema() map[string]*schema.Schema {
 		},
 		"vms": {
 			Type:     schema.TypeList,
-			Elem:     vms,
+			Elem:     &schema.Resource{Schema: vms},
 			Computed: true,
 		},
 	}

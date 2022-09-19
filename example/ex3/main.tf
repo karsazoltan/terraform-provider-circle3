@@ -2,7 +2,7 @@ terraform {
   required_providers {
     circle3 = {
       version = "0.1"
-      source  = "hashicorp.com/edu/circle3"
+      source  = "bmeik/tf/circle3"
     }
   }
 }
@@ -13,11 +13,11 @@ provider "circle3" {
   // export CIRCLE3_TOKEN="secret-key"
 }
 
-data "circle3_lease_byname" "labor_lease" {
+data "circle3_lease" "labor_lease" {
   name = "lab"
 }
 
-data "circle3_vlan_byname" "default_vlan" {
+data "circle3_vlan" "default_vlan" {
   name = "vm"
 }
 
@@ -33,7 +33,7 @@ resource "circle3_vm" "basic" {
   access_method = "ssh"
   description   = "valami"
   boot_menu     = true
-  lease         = data.circle3_lease_byname.labor_lease.id
+  lease         = data.circle3_lease.labor_lease.id
   cloud_init    = true
   ci_meta_data  = file("${path.module}/meta-data.yaml")
   ci_user_data  = file("${path.module}/user-data.yaml")
@@ -45,5 +45,5 @@ resource "circle3_vm" "basic" {
   priority      = 80
   arch          = "x86_64"
   disks = [circle3_disk.ubuntu18.id]
-  vlans = [data.circle3_vlan_byname.default_vlan.vid]
+  vlans = [data.circle3_vlan.default_vlan.vid]
 }
