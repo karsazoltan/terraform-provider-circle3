@@ -187,3 +187,15 @@ type TemplateCreating struct {
 	Template   int    `json:"template"`
 	Users      []int  `json:"users,omitempty"`
 }
+
+type PortsReq struct {
+	Vlan     int `json:"vlan,omitempty"`
+	Instance int `json:"instance,omitempty"`
+}
+
+type OpenPort struct {
+	Forwarding      bool   `json:"forwarding,omitempty"`
+	DestinationPort int    `json:"port_destination,omitempty"`
+	SourcePort      int    `json:"port_source,omitempty"`
+	Type            string `json:"type,omitempty"`
+}

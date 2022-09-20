@@ -302,3 +302,36 @@ func vmpoolSchema() map[string]*schema.Schema {
 		},
 	}
 }
+
+func portSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"id": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"forwarding": {
+			Type:     schema.TypeBool,
+			Computed: true,
+		},
+		"source_port": {
+			Type:     schema.TypeInt,
+			Computed: true,
+		},
+		"type": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"vm": {
+			Type:     schema.TypeInt,
+			Required: true,
+		},
+		"vlan": {
+			Type:     schema.TypeInt,
+			Required: true,
+		},
+		"port": {
+			Type:     schema.TypeInt,
+			Required: true,
+		},
+	}
+}
