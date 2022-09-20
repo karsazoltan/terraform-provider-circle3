@@ -60,6 +60,12 @@ func dataSourceGroupRead(ctx context.Context, d *schema.ResourceData, m interfac
 		d.SetId(strconv.Itoa(group.ID))
 		d.Set("name", group.Name)
 		d.Set("users", group.UserSet)
+	} else {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "One required field: name or id",
+			Detail:   "",
+		})
 	}
 
 	return diags

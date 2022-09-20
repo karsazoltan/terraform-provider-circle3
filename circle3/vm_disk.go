@@ -44,13 +44,21 @@ func resourceDDiskCreate(ctx context.Context, d *schema.ResourceData, m interfac
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	for !activity.Succeeded {
+	for activity.Succeeded == nil {
 		time.Sleep(time.Second)
 		activity, err = c.GetInstanceActivities(activity.ID)
 		if err != nil {
 			return diag.FromErr(err)
 		}
 		tflog.Info(ctx, fmt.Sprintf("Downloading (%v) ... ", activity.GetPercentage))
+	}
+	if !*activity.Succeeded {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "Error while downloading ...",
+			Detail:   "",
+		})
+		return diags
 	}
 	d.SetId(strconv.Itoa(activity.ResultData.Params.DiskID))
 	d.Set("checksum", activity.ResultData.Params.Checksum)

@@ -139,7 +139,7 @@ type InstanceActivities struct {
 	} `json:"result_data,omitempty"`
 	ResultantState string    `json:"resultant_state"`
 	Started        time.Time `json:"started"`
-	Succeeded      bool      `json:"succeeded"`
+	Succeeded      *bool     `json:"succeeded"`
 	TaskUuid       string    `json:"task_uuid"`
 	User           int       `json:"user"`
 }
@@ -153,7 +153,7 @@ type StorageActivity struct {
 	Parent     int       `json:"parent"`
 	ResultData string    `json:"result_data"`
 	Started    time.Time `json:"started"`
-	Succeeded  bool      `json:"succeeded"`
+	Succeeded  *bool     `json:"succeeded"`
 	TaskUuid   string    `json:"task_uuid"`
 	User       int       `json:"user"`
 }

@@ -33,13 +33,21 @@ func resourceTemplateCreate(ctx context.Context, d *schema.ResourceData, m inter
 		return diag.FromErr(err)
 	}
 
-	for !activity.Succeeded {
+	for activity.Succeeded == nil {
 		time.Sleep(time.Second)
 		activity, err = c.GetInstanceActivities(activity.ID)
 		if err != nil {
 			return diag.FromErr(err)
 		}
 		tflog.Info(ctx, fmt.Sprintf("Creating (%v) ... ", activity.GetPercentage))
+	}
+	if !*activity.Succeeded {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "Error while downloading ...",
+			Detail:   "",
+		})
+		return diags
 	}
 
 	d.SetId(strconv.Itoa(activity.ResultData.Params.TemplateID))
