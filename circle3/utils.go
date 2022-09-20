@@ -8,3 +8,19 @@ func contains(s []int, e int) bool {
 	}
 	return false
 }
+
+func ContainsString(pattern string, array []string) bool {
+	for _, i := range array {
+		if i == pattern {
+			return true
+		}
+	}
+	return false
+}
+
+func CheckPowerOfTwo(n int) int {
+	if n == 0 {
+		return 1
+	}
+	return n & (n - 1)
+}

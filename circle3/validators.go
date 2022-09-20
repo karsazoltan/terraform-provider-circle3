@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 
@@ -54,13 +55,6 @@ func ValidatePositiveNumber(v interface{}, p cty.Path) diag.Diagnostics {
 	return diags
 }
 
-func CheckPowerOfTwo(n int) int {
-	if n == 0 {
-		return 1
-	}
-	return n & (n - 1)
-}
-
 func ValidateRamNumber(v interface{}, p cty.Path) diag.Diagnostics {
 	var diags diag.Diagnostics
 
@@ -71,6 +65,39 @@ func ValidateRamNumber(v interface{}, p cty.Path) diag.Diagnostics {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "Value must be power of 2",
+			Detail:   "",
+		})
+		return diags
+	}
+
+	return diags
+}
+
+func ValidateStatus(v interface{}, p cty.Path) diag.Diagnostics {
+	var diags diag.Diagnostics
+	allowed := []string{"STOPPED", "RUNNING", "SUSPENDED", "PENDING"}
+	status := v.(string)
+
+	if !ContainsString(status, allowed) {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  fmt.Sprintf("Supported values for status: %v", allowed),
+			Detail:   "",
+		})
+		return diags
+	}
+
+	return diags
+}
+
+func ValidatePriority(v interface{}, p cty.Path) diag.Diagnostics {
+	var diags diag.Diagnostics
+	priority := v.(int)
+
+	if priority <= 0 || priority > 100 {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "Priority must be between 0 and 100",
 			Detail:   "",
 		})
 		return diags

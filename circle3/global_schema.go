@@ -15,8 +15,9 @@ func vmSchema() map[string]*schema.Schema {
 			Computed: true,
 		},
 		"status": {
-			Type:     schema.TypeString,
-			Optional: true,
+			Type:             schema.TypeString,
+			Optional:         true,
+			ValidateDiagFunc: ValidateStatus,
 		},
 		"node": {
 			Type:     schema.TypeInt,
@@ -95,7 +96,7 @@ func vmSchema() map[string]*schema.Schema {
 		"priority": {
 			Type:             schema.TypeInt,
 			Optional:         true,
-			ValidateDiagFunc: ValidatePositiveNumber,
+			ValidateDiagFunc: ValidatePriority,
 		},
 		"vlans": {
 			Type: schema.TypeList,
@@ -277,6 +278,11 @@ func vmpoolSchema() map[string]*schema.Schema {
 		"from_template": {
 			Type:     schema.TypeInt,
 			Required: true,
+		},
+		"status": {
+			Type:             schema.TypeString,
+			Optional:         true,
+			ValidateDiagFunc: ValidateStatus,
 		},
 		"name": {
 			Type:     schema.TypeString,
