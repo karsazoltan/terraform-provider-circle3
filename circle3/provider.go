@@ -30,7 +30,7 @@ func Provider() *schema.Provider {
 			"circle3_disk":     resourceDisk(),
 			"circle3_template": resourceTemplate(),
 			"circle3_vmpool":   resourceVMPool(),
-			"circle3_pot":      resourcePort(),
+			"circle3_port":     resourcePort(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"circle3_leases":   dataSourceLeases(),

@@ -104,6 +104,7 @@ func vmSchema() map[string]*schema.Schema {
 				Type: schema.TypeInt,
 			},
 			Optional: true,
+			Computed: true,
 		},
 		"disks": {
 			Type: schema.TypeList,

@@ -199,3 +199,27 @@ type OpenPort struct {
 	SourcePort      int    `json:"port_source,omitempty"`
 	Type            string `json:"type,omitempty"`
 }
+
+type NetRule struct {
+	Action          string    `json:"action"`
+	CreatedAt       time.Time `json:"created_at"`
+	Description     string    `json:"description"`
+	Direction       string    `json:"direction"`
+	Dport           int       `json:"dport"`
+	Extra           string    `json:"extra"`
+	Firewall        int       `json:"firewall"`
+	ForeignNetwork  int       `json:"foreign_network"`
+	Host            int       `json:"host"`
+	Hostgroup       int       `json:"hostgroup"`
+	ID              int       `json:"id"`
+	ModifiedAt      time.Time `json:"modified_at"`
+	Nat             bool      `json:"nat"`
+	NatExternalIpv4 string    `json:"nat_external_ipv4,omitempty"`
+	NatExternalPort int       `json:"nat_external_port"`
+	Owner           int       `json:"owner"`
+	Proto           string    `json:"proto"`
+	Sport           int       `json:"sport,omitempty"`
+	Vlan            int       `json:"vlan,omitempty"`
+	Vlangroup       int       `json:"vlangroup,omitempty"`
+	Weight          int       `json:"weight"`
+}

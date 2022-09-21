@@ -21,3 +21,10 @@ resource "circle3_vm" "from_template_tf" {
   name = "from template"
   from_template = data.circle3_template.basetemplate.id
 }
+
+resource "circle3_port" "openport8080" {
+  port = 8080
+  vlan = circle3_vm.from_template_tf.vlans[0]
+  vm = circle3_vm.from_template_tf.id
+  type = "tcp"
+}
