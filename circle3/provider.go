@@ -24,6 +24,29 @@ func Provider() *schema.Provider {
 				Required:    true,
 				DefaultFunc: schema.EnvDefaultFunc("CIRCLE3_TOKEN", ""),
 			},
+			"datacenters": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"address": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc("SERVICE_ADDRESS", ""),
+						},
+						"port": {
+							Type:        schema.TypeInt,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc("SERVICE_PORT", ""),
+						},
+						"token": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc("CIRCLE3_TOKEN", ""),
+						},
+					},
+				},
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"circle3_vm":       resourceVM(),
