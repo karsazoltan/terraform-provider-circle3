@@ -223,3 +223,8 @@ type NetRule struct {
 	Vlangroup       int       `json:"vlangroup,omitempty"`
 	Weight          int       `json:"weight"`
 }
+
+type Metric struct {
+	Target     string      `json:"target,omitempty"`
+	Datapoints [][]float64 `json:"datapoints,omitempty"`
+}
