@@ -16,6 +16,10 @@ type Client struct {
 	httpClient *http.Client
 }
 
+type DataCenters struct {
+	clients []Client
+}
+
 func NewClient(hostname string, port int, token string) *Client {
 	transCfg := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates

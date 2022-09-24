@@ -69,8 +69,21 @@ func Provider() *schema.Provider {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	address := d.Get("address").(string)
-	port := d.Get("port").(int)
-	token := d.Get("token").(string)
-	return client.NewClient(address, port, token), nil
+	if _, ok := d.GetOk("datacenters"); ok {
+		datacenters_int := d.Get("datacenters").([]interface{})
+		clients := make([]client.Client, len(datacenters_int))
+		for i, e := range datacenters_int {
+			item := e.(schema.ResourceData)
+			address := item.Get("address").(string)
+			port := item.Get("port").(int)
+			token := item.Get("token").(string)
+			clients[i] = *client.NewClient(address, port, token)
+		}
+	} else {
+		address := d.Get("address").(string)
+		port := d.Get("port").(int)
+		token := d.Get("token").(string)
+		return client.NewClient(address, port, token), nil
+	}
+	return nil, nil
 }
