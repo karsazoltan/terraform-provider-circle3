@@ -7,6 +7,9 @@ terraform {
   }
 }
 
+variable "CIRCLE3_TOKEN" {
+}
+
 provider "circle3" {
   address = "https://axolotl.niif.cloud.bme.hu"
   port    = 443
