@@ -13,7 +13,7 @@ variable "CIRCLE3_TOKEN" {
 provider "circle3" {
   address = "https://axolotl.niif.cloud.bme.hu"
   port    = 443
-  // export CIRCLE3_TOKEN="secret-key"
+  token = var.CIRCLE3_TOKEN
 }
 
 data "circle3_lease" "labor_lease" {
