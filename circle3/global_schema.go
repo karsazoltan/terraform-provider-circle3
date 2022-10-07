@@ -58,14 +58,27 @@ func vmSchema() map[string]*schema.Schema {
 		"cloud_init": {
 			Type:     schema.TypeBool,
 			Optional: true,
+			Default:  false,
 		},
 		"ci_meta_data": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Default:  "",
 		},
 		"ci_user_data": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Default:  "",
+		},
+		"ci_network_config": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Default:  "",
+		},
+		"hookurl": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Default:  "",
 		},
 		"system": {
 			Type:     schema.TypeString,
@@ -159,6 +172,10 @@ func templateSchema() map[string]*schema.Schema {
 			Computed: true,
 		},
 		"ci_meta_data": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"ci_network_config": {
 			Type:     schema.TypeString,
 			Computed: true,
 		},

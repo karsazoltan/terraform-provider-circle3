@@ -36,24 +36,26 @@ func resourceBaseVMCreate(ctx context.Context, d *schema.ResourceData, m interfa
 	tflog.Info(ctx, "Create base vm")
 	empty_req := []string{}
 	vmrest := circleclient.VM{
-		Status:       d.Get("status").(string),
-		Owner:        d.Get("owner").(int),
-		Name:         d.Get("name").(string),
-		Description:  d.Get("description").(string),
-		Lease:        d.Get("lease").(int),
-		CloudInit:    d.Get("cloud_init").(bool),
-		CiMetaData:   d.Get("ci_meta_data").(string),
-		CiUserData:   d.Get("ci_user_data").(string),
-		System:       d.Get("system").(string),
-		HasAgent:     d.Get("has_agent").(bool),
-		NumCores:     d.Get("num_cores").(int),
-		RamSize:      d.Get("ram_size").(int),
-		MaxRamSize:   d.Get("max_ram_size").(int),
-		Priority:     d.Get("priority").(int),
-		AccessMethod: d.Get("access_method").(string),
-		Arch:         d.Get("arch").(string),
-		BootMenu:     d.Get("boot_menu").(bool),
-		ReqTraits:    empty_req,
+		Status:          d.Get("status").(string),
+		Owner:           d.Get("owner").(int),
+		Name:            d.Get("name").(string),
+		Description:     d.Get("description").(string),
+		Lease:           d.Get("lease").(int),
+		CloudInit:       d.Get("cloud_init").(bool),
+		CiMetaData:      d.Get("ci_meta_data").(string),
+		CiUserData:      d.Get("ci_user_data").(string),
+		CiNetworkConfig: d.Get("ci_network_config").(string),
+		HookUrl:         d.Get("hookurl").(string),
+		System:          d.Get("system").(string),
+		HasAgent:        d.Get("has_agent").(bool),
+		NumCores:        d.Get("num_cores").(int),
+		RamSize:         d.Get("ram_size").(int),
+		MaxRamSize:      d.Get("max_ram_size").(int),
+		Priority:        d.Get("priority").(int),
+		AccessMethod:    d.Get("access_method").(string),
+		Arch:            d.Get("arch").(string),
+		BootMenu:        d.Get("boot_menu").(bool),
+		ReqTraits:       empty_req,
 	}
 
 	if d.Get("vlans") != nil {
@@ -121,6 +123,7 @@ func resourceVMRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	d.Set("cloud_init", vm.CloudInit)
 	d.Set("ci_user_data", vm.CiUserData)
 	d.Set("ci_meta_data", vm.CiMetaData)
+	d.Set("ci_network_config", vm.CiNetworkConfig)
 	d.Set("system", vm.System)
 	d.Set("has_agent", vm.HasAgent)
 	d.Set("num_cores", vm.NumCores)
