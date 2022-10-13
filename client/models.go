@@ -231,3 +231,10 @@ type Metric struct {
 	Target     string      `json:"target,omitempty"`
 	Datapoints [][]float64 `json:"datapoints,omitempty"`
 }
+
+type Variable struct {
+	ID    int    `json:"id"`
+	Key   string `json:"key"`
+	URL   string `json:"url"`
+	Value string `json:"value"`
+}

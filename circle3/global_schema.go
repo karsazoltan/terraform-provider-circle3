@@ -353,3 +353,24 @@ func portSchema() map[string]*schema.Schema {
 		},
 	}
 }
+
+func variableSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"id": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"name": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"value": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"url": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+	}
+}
