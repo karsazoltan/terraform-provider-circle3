@@ -56,3 +56,7 @@ resource "circle3_vm" "basic" {
   disks = [circle3_disk.ubuntu18[each.key].id]
   vlans = [data.circle3_vlan.default_vlan.vid]
 }
+
+output "vm-ipv4" {
+  value = [for k, v in local.virtual_machines : "${circle3_vm.basic[k].ipv4}"]
+}

@@ -32,7 +32,6 @@ func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}
 
 func resourceBaseVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*circleclient.Client)
-	var diags diag.Diagnostics
 	tflog.Info(ctx, "Create base vm")
 	empty_req := []string{}
 	vmrest := circleclient.VM{
@@ -82,7 +81,7 @@ func resourceBaseVMCreate(ctx context.Context, d *schema.ResourceData, m interfa
 	}
 	d.SetId(strconv.Itoa(newvm.ID))
 
-	return diags
+	return resourceVMRead(ctx, d, m)
 }
 
 func resourceVMfromTemplateCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
