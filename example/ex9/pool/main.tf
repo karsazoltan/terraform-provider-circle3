@@ -8,15 +8,15 @@ terraform {
 }
 
 provider "circle3" {
-  address = "https://axolotl.niif.cloud.bme.hu"
+  address = "https://meres.fured.cloud.bme.hu"
   port    = 443
   //token   = "secret" -> export CIRCLE3_TOKEN="..."
 }
 variable "list" {
-  type = list(string)
+  type = list(number)
 }
 data "circle3_template" "basetemplate" {
-  name = "meres-temp v1"
+  name = "meres-sablon"
 }
 resource "circle3_vmpool" "pool_users" {
   name = "vm pool"
