@@ -15,9 +15,8 @@ data "circle3_template" "basetemplate" {
   name = "staticnet v1"
 }
 resource "circle3_vm" "from_template_tf" {
-  name = "demo"
+  name = "cloud3 init"
   from_template = data.circle3_template.basetemplate.id
-
   connection {
     type = "ssh"
     user = "cloud"
@@ -27,7 +26,12 @@ resource "circle3_vm" "from_template_tf" {
   }
   provisioner "remote-exec" {
     inline = [
-      "echo 'hello world' > hello.txt"
+      "sudo apt update",
+      "sudo apt -y  install python3 python3-dev git python3-pip git",
+      "git clone https://git.ik.bme.hu/CIRCLE3/salt.git"
     ]
   }
+}
+output "vm-ip" {
+  value = circle3_vm.from_template_tf.ipv4
 }
