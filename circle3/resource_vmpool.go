@@ -49,6 +49,8 @@ func flattenVM(vms *[]circleclient.VM) []interface{} {
 			vm["max_ram_size"] = vmitem.MaxRamSize
 			vm["arch"] = vmitem.Arch
 			vm["priority"] = vmitem.Priority
+			vm["sshportipv4"] = vmitem.SSHPortIpv4
+			vm["hostipv4"] = vmitem.HostIpv4
 
 			vmsi[i] = vm
 		}

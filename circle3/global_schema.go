@@ -130,6 +130,14 @@ func vmSchema() map[string]*schema.Schema {
 			Type:     schema.TypeInt,
 			Optional: true,
 		},
+		"sshportipv4": {
+			Type:     schema.TypeInt,
+			Computed: true,
+		},
+		"hostipv4": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
 	}
 }
 

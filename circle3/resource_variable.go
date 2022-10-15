@@ -14,7 +14,6 @@ func resourceVariable() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceVariableCreate,
 		ReadContext:   resourceVariableRead,
-		UpdateContext: resourceVariableUpdate,
 		DeleteContext: resourceVariableDelete,
 		Schema:        variableSchema(),
 	}
@@ -57,10 +56,6 @@ func resourceVariableRead(ctx context.Context, d *schema.ResourceData, m interfa
 	d.Set("url", respvar.URL)
 
 	return diags
-}
-
-func resourceVariableUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	return resourceVariableRead(ctx, d, m)
 }
 
 func resourceVariableDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

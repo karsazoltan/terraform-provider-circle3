@@ -130,6 +130,8 @@ func resourceVMRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	d.Set("max_ram_size", vm.MaxRamSize)
 	d.Set("arch", vm.Arch)
 	d.Set("priority", vm.Priority)
+	d.Set("sshportipv4", vm.SSHPortIpv4)
+	d.Set("hostipv4", vm.HostIpv4)
 
 	return diags
 }

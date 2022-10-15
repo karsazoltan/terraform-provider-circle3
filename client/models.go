@@ -41,6 +41,8 @@ type VM struct {
 	Status          string   `json:"status"`
 	System          string   `json:"system"`
 	Vlans           []int    `json:"vlans,omitempty"`
+	SSHPortIpv4     int      `json:"sshportipv4,omitempty"`
+	HostIpv4        string   `json:"hostipv4,omitempty"`
 }
 
 type VMResource struct {
