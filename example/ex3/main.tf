@@ -24,6 +24,7 @@ data "circle3_vlan" "default_vlan" {
 resource "circle3_disk" "ubuntu18" {
   name = "ubuntu18.04"
   url = "http://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img"
+  resize = "10G"
 }
 
 resource "circle3_vm" "basic" {

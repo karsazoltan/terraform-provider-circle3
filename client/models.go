@@ -113,6 +113,7 @@ type DDisk struct {
 	Instance int    `json:"instance,omitempty"`
 	Url      string `json:"url"`
 	Name     string `json:"name"`
+	Resize   string `json:"resize"`
 }
 
 type CDisk struct {

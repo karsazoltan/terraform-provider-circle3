@@ -289,6 +289,12 @@ func diskSchema() map[string]*schema.Schema {
 			Optional: true,
 			ForceNew: true,
 		},
+		"resize": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Default:  "",
+			ForceNew: true,
+		},
 	}
 }
 

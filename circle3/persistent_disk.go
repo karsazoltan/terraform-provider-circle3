@@ -33,8 +33,9 @@ func resourcePersistentDDiskCreate(ctx context.Context, d *schema.ResourceData, 
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 	vmrest := circleclient.DDisk{
-		Url:  d.Get("url").(string),
-		Name: d.Get("name").(string),
+		Url:    d.Get("url").(string),
+		Name:   d.Get("name").(string),
+		Resize: d.Get("resize").(string),
 	}
 	tflog.Info(ctx, "Create persistent disk (download from url)")
 	activity, err := c.CreatePersistentDDisk(vmrest)
