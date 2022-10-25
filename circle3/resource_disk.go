@@ -15,6 +15,9 @@ func resourceDisk() *schema.Resource {
 		UpdateContext: resourceDiskUpdate,
 		DeleteContext: resourceDiskDelete,
 		Schema:        disk_schema,
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

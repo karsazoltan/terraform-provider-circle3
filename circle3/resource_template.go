@@ -19,6 +19,9 @@ func resourceTemplate() *schema.Resource {
 		UpdateContext: resourceTemplateUpdate,
 		DeleteContext: resourceTemplateDelete,
 		Schema:        templateSchema(),
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

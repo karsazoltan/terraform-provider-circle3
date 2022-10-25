@@ -20,6 +20,9 @@ func resourceVM() *schema.Resource {
 		UpdateContext: resourceVMUpdate,
 		DeleteContext: resourceVMDelete,
 		Schema:        vmSchema(),
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 
