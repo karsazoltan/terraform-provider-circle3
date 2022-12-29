@@ -32,6 +32,7 @@ type VM struct {
 	Name            string   `json:"name"`
 	Node            int      `json:"node,omitempty"`
 	NumCores        int      `json:"num_cores"`
+	NumCoresMax     int      `json:"num_cores_max"`
 	Owner           int      `json:"owner"`
 	Priority        int      `json:"priority"`
 	Pw              string   `json:"pw"`
@@ -46,11 +47,12 @@ type VM struct {
 }
 
 type VMResource struct {
-	Lease      int `json:"lease"`
-	MaxRamSize int `json:"max_ram_size"`
-	NumCores   int `json:"num_cores"`
-	Priority   int `json:"priority"`
-	RamSize    int `json:"ram_size"`
+	Lease       int `json:"lease"`
+	MaxRamSize  int `json:"max_ram_size"`
+	NumCores    int `json:"num_cores"`
+	Priority    int `json:"priority"`
+	RamSize     int `json:"ram_size"`
+	NumCoresMax int `json:"num_cores_max"`
 }
 
 type Template struct {
@@ -69,6 +71,7 @@ type Template struct {
 	MaxRamSize      int    `json:"max_ram_size"`
 	Name            string `json:"name"`
 	NumCores        int    `json:"num_cores"`
+	NumCoresMax     int    `json:"num_cores_max"`
 	Owner           int    `json:"owner"`
 	Parent          int    `json:"parent"`
 	Priority        int    `json:"priority"`

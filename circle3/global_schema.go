@@ -92,6 +92,11 @@ func vmSchema() map[string]*schema.Schema {
 			Type:     schema.TypeInt,
 			Optional: true,
 		},
+		"num_cores_max": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Default:  0,
+		},
 		"ram_size": {
 			Type:             schema.TypeInt,
 			Optional:         true,

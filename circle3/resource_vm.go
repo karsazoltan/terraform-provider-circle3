@@ -51,6 +51,7 @@ func resourceBaseVMCreate(ctx context.Context, d *schema.ResourceData, m interfa
 		System:          d.Get("system").(string),
 		HasAgent:        d.Get("has_agent").(bool),
 		NumCores:        d.Get("num_cores").(int),
+		NumCoresMax:     d.Get("num_cores_max").(int),
 		RamSize:         d.Get("ram_size").(int),
 		MaxRamSize:      d.Get("max_ram_size").(int),
 		Priority:        d.Get("priority").(int),
@@ -129,6 +130,7 @@ func resourceVMRead(ctx context.Context, d *schema.ResourceData, m interface{}) 
 	d.Set("system", vm.System)
 	d.Set("has_agent", vm.HasAgent)
 	d.Set("num_cores", vm.NumCores)
+	d.Set("num_cores_max", vm.NumCoresMax)
 	d.Set("ram_size", vm.RamSize)
 	d.Set("max_ram_size", vm.MaxRamSize)
 	d.Set("arch", vm.Arch)
@@ -167,18 +169,31 @@ func resourceVMUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 		}
 	}
 
-	if d.HasChange("num_cores") || d.HasChange("ram_size") || d.HasChange("max_ram_size") || d.HasChange("priority") {
-		if d.Get("state") == "STOPPED" {
+	if d.HasChange("num_cores") || d.HasChange("ram_size") {
+		if d.HasChange("max_ram_size") || d.HasChange("priority") || d.HasChange("num_cores_max") {
+			if d.Get("state") != "RUNNING" {
+				tflog.Info(ctx, "Update vm resources")
+				update := circleclient.VMResource{
+					MaxRamSize:  d.Get("max_ram_size").(int),
+					RamSize:     d.Get("ram_size").(int),
+					NumCores:    d.Get("num_cores").(int),
+					Priority:    d.Get("priority").(int),
+					NumCoresMax: d.Get("num_cores_max").(int),
+				}
+				c.UpdateVMResource(vmid, update)
+			} else {
+				return diag.FromErr(errors.New("VM state is incorrect for change resources"))
+			}
+		} else {
 			tflog.Info(ctx, "Update vm resources")
 			update := circleclient.VMResource{
-				MaxRamSize: d.Get("max_ram_size").(int),
-				RamSize:    d.Get("ram_size").(int),
-				NumCores:   d.Get("num_cores").(int),
-				Priority:   d.Get("priority").(int),
+				MaxRamSize:  d.Get("max_ram_size").(int),
+				NumCoresMax: d.Get("num_cores_max").(int),
+				RamSize:     d.Get("ram_size").(int),
+				NumCores:    d.Get("num_cores").(int),
+				Priority:    d.Get("priority").(int),
 			}
 			c.UpdateVMResource(vmid, update)
-		} else {
-			return diag.FromErr(errors.New("VM state is incorrect for change resources"))
 		}
 	}
 
