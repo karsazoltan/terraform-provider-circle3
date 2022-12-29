@@ -28,7 +28,7 @@ resource "circle3_disk" "ubuntu18" {
 }
 
 resource "circle3_vm" "basic" {
-  status        = "STOPPED"
+  status        = "RUNNING"
   owner         = 1
   name          = "terraform"
   access_method = "ssh"
@@ -40,9 +40,9 @@ resource "circle3_vm" "basic" {
   ci_user_data  = file("${path.module}/user-data.yaml")
   system        = "ubuntu 18.04"
   has_agent     = false
-  num_cores     = 2
-  ram_size      = 256
-  max_ram_size  = 256
+  num_cores     = 4
+  ram_size      = 512
+  max_ram_size  = 2048
   priority      = 80
   arch          = "x86_64"
   disks = [circle3_disk.ubuntu18.id]

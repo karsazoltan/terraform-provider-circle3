@@ -11,7 +11,7 @@ data "circle3_user" "user" {
 }
 resource "circle3_vm" "for_each_users" {
   for_each = toset(var.users)
-  name = "vm pool ${each.key}"
+  name = "vm-${each.key}"
   from_template = data.circle3_template.meres.id
   owner = data.circle3_user.user[each.key].id   
 }
