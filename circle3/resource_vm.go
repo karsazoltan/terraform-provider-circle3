@@ -169,7 +169,7 @@ func resourceVMUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 		}
 	}
 
-	if d.Get("state") != "RUNNING" {
+	if d.Get("status").(string) != "RUNNING" {
 		if d.HasChange("max_ram_size") || d.HasChange("priority") ||
 			d.HasChange("num_cores_max") || d.HasChange("num_cores") || d.HasChange("ram_size") {
 			tflog.Info(ctx, "Update vm static resources")

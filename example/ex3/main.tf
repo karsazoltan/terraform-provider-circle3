@@ -38,10 +38,12 @@ resource "circle3_vm" "basic" {
   cloud_init    = true
   ci_meta_data  = file("${path.module}/meta-data.yaml")
   ci_user_data  = file("${path.module}/user-data.yaml")
+  ci_network_config = file("${path.module}/network-data.yaml")
   system        = "ubuntu 18.04"
   has_agent     = false
   num_cores     = 4
-  ram_size      = 512
+  num_cores_max = 6
+  ram_size      = 1024
   max_ram_size  = 2048
   priority      = 80
   arch          = "x86_64"

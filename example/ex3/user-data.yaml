@@ -1,11 +1,15 @@
 #cloud-config
 
+ssh_pwauth: 1
+
 users:
   - name: {{ sysuser }} 
     sudo: ['ALL=(ALL) NOPASSWD:ALL']
     groups: sudo
     shell: /bin/bash
-    ssh_pwauth: True
     chpasswd: { expire: False }
     lock-passwd: false
-    passwd: "{{ password | hash }}"
+chpasswd:
+    list: |
+        {{ sysuser }}:{{ password }}
+    expire: False
