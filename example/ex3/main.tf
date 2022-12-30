@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "circle3" {
-  address = "https://cloud3.fured.cloud.bme.hu"
+  address = "https://wombat.ik.bme.hu"
   port    = 443
   // export CIRCLE3_TOKEN="secret-key"
 }
