@@ -41,12 +41,12 @@ resource "circle3_vm" "basic" {
   ci_network_config = file("${path.module}/network-data.yaml")
   system        = "ubuntu 18.04"
   has_agent     = false
-  num_cores     = 4
+  num_cores     = 6
   num_cores_max = 6
   ram_size      = 1024
   max_ram_size  = 2048
   priority      = 80
   arch          = "x86_64"
   disks = [circle3_disk.ubuntu18.id]
-  vlans = [data.circle3_vlan.default_vlan.vid]
+  vlans = [data.circle3_vlan.default_vlan.id]
 }
