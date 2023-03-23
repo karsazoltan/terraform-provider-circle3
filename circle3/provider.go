@@ -24,6 +24,11 @@ func Provider() *schema.Provider {
 				Required:    true,
 				DefaultFunc: schema.EnvDefaultFunc("CIRCLE3_TOKEN", ""),
 			},
+			"authtype": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("CIRCLE3_AUTH", "token"),
+			},
 			"datacenters": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -55,6 +60,7 @@ func Provider() *schema.Provider {
 			"circle3_vmpool":   resourceVMPool(),
 			"circle3_port":     resourcePort(),
 			"circle3_variable": resourceVariable(),
+			"circle3_lbvm":     resourceLBVM(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"circle3_leases":   dataSourceLeases(),
@@ -78,13 +84,15 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			address := item.Get("address").(string)
 			port := item.Get("port").(int)
 			token := item.Get("token").(string)
-			clients[i] = *client.NewClient(address, port, token)
+			authtype := item.Get("authtype").(string)
+			clients[i] = *client.NewClient(address, port, token, authtype)
 		}
 	} else {
 		address := d.Get("address").(string)
 		port := d.Get("port").(int)
 		token := d.Get("token").(string)
-		return client.NewClient(address, port, token), nil
+		authtype := d.Get("authtype").(string)
+		return client.NewClient(address, port, token, authtype), nil
 	}
 	return nil, nil
 }

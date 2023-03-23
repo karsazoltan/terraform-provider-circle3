@@ -7,11 +7,15 @@ terraform {
   }
 }
 provider "circle3" {
-  address = "https://cloud3.fured.cloud.bme.hu"
-  port    = 443
+  address = "http://proxy.fured.cloud.bme.hu"
+  port    = 6973
+  authtype = "Bearer"
   // export CIRCLE3_TOKEN="secret-key"
 }
 
-resource "circle3_vm" "basic" {
+resource "circle3_lbvm" "demo" {
+  name = "loadbalancing"
+  from_template = "ubuntu"
+  username = "admin"
 }
 

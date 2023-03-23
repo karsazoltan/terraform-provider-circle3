@@ -146,6 +146,147 @@ func vmSchema() map[string]*schema.Schema {
 	}
 }
 
+func vmLoadBalancingSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"id": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"pw": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"node": {
+			Type:     schema.TypeInt,
+			Computed: true,
+		},
+		"ipv4": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"ipv6": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"name": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"username": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"access_method": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"description": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"boot_menu": {
+			Type:     schema.TypeBool,
+			Computed: true,
+		},
+		"lease": {
+			Type:     schema.TypeInt,
+			Computed: true,
+		},
+		"cloud_init": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			Default:  false,
+		},
+		"ci_meta_data": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"ci_user_data": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"ci_network_config": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"hookurl": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"system": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"has_agent": {
+			Type:     schema.TypeBool,
+			Computed: true,
+		},
+		"num_cores": {
+			Type:     schema.TypeInt,
+			Optional: true,
+		},
+		"num_cores_max": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Default:  0,
+		},
+		"ram_size": {
+			Type:             schema.TypeInt,
+			Optional:         true,
+			ValidateDiagFunc: ValidateRamNumber,
+		},
+		"max_ram_size": {
+			Type:             schema.TypeInt,
+			Optional:         true,
+			ValidateDiagFunc: ValidateRamNumber,
+		},
+		"arch": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"priority": {
+			Type:             schema.TypeInt,
+			Optional:         true,
+			ValidateDiagFunc: ValidatePriority,
+		},
+		"vlans": {
+			Type: schema.TypeList,
+			Elem: &schema.Schema{
+				Type: schema.TypeInt,
+			},
+			Computed: true,
+		},
+		"disks": {
+			Type: schema.TypeList,
+			Elem: &schema.Schema{
+				Type: schema.TypeInt,
+			},
+			Computed: true,
+		},
+		"from_template": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"sshportipv4": {
+			Type:     schema.TypeInt,
+			Computed: true,
+		},
+		"hostipv4": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"datacenter": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"balancer_method": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Default:  "rr",
+		},
+	}
+}
+
 func templateSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"id": {

@@ -13,6 +13,7 @@ type Client struct {
 	hostname   string
 	port       int
 	authToken  string
+	authType   string `default:"token "`
 	httpClient *http.Client
 }
 
@@ -20,7 +21,7 @@ type DataCenters struct {
 	clients []Client
 }
 
-func NewClient(hostname string, port int, token string) *Client {
+func NewClient(hostname string, port int, token string, authtype string) *Client {
 	transCfg := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, // ignore expired SSL certificates
 	}
@@ -28,6 +29,7 @@ func NewClient(hostname string, port int, token string) *Client {
 		hostname:   hostname,
 		port:       port,
 		authToken:  token,
+		authType:   authtype,
 		httpClient: &http.Client{Timeout: 40 * time.Second, Transport: transCfg},
 	}
 }
@@ -37,7 +39,7 @@ func (c *Client) httpRequest(path, method string, body bytes.Buffer, allowedStau
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Add("Authorization", fmt.Sprintf("token %s", c.authToken))
+	req.Header.Add("Authorization", fmt.Sprintf("%s %s", c.authType, c.authToken))
 	switch method {
 	case "GET":
 	case "DELETE":

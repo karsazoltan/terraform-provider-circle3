@@ -46,6 +46,42 @@ type VM struct {
 	HostIpv4        string   `json:"hostipv4,omitempty"`
 }
 
+type LBVM struct {
+	AccessMethod    string   `json:"access_method"`
+	Arch            string   `json:"arch"`
+	BootMenu        bool     `json:"boot_menu"`
+	CiMetaData      string   `json:"ci_meta_data,omitempty"`
+	CiUserData      string   `json:"ci_user_data,omitempty"`
+	CiNetworkConfig string   `json:"ci_network_config,omitempty"`
+	HookUrl         string   `json:"hookurl,omitempty"`
+	CloudInit       bool     `json:"cloud_init"`
+	Description     string   `json:"description"`
+	Disks           []int    `json:"disks,omitempty"`
+	HasAgent        bool     `json:"has_agent"`
+	ID              int      `json:"id"`
+	Ipv4Addr        string   `json:"ipv4addr"`
+	Ipv6Addr        string   `json:"ipv6addr"`
+	IsBase          bool     `json:"is_base"`
+	Lease           int      `json:"lease"`
+	MaxRamSize      int      `json:"max_ram_size"`
+	Name            string   `json:"name"`
+	Node            int      `json:"node,omitempty"`
+	NumCores        int      `json:"num_cores"`
+	NumCoresMax     int      `json:"num_cores_max"`
+	Owner           int      `json:"owner"`
+	Priority        int      `json:"priority"`
+	Pw              string   `json:"pw"`
+	RamSize         int      `json:"ram_size"`
+	RawData         string   `json:"raw_data"`
+	ReqTraits       []string `json:"req_traits,omitempty"`
+	Status          string   `json:"status"`
+	System          string   `json:"system"`
+	Vlans           []int    `json:"vlans,omitempty"`
+	SSHPortIpv4     int      `json:"sshportipv4,omitempty"`
+	HostIpv4        string   `json:"hostipv4,omitempty"`
+	DataCenter      string   `json:"datacenter,omitempty"`
+}
+
 type VMResource struct {
 	Lease       int `json:"lease"`
 	MaxRamSize  int `json:"max_ram_size"`
