@@ -76,6 +76,40 @@ func (c *Client) UpdateVMResource(id int, resource VMResource) error {
 	return nil
 }
 
+func (c *Client) UpdateMemHotplug(id int, mem_size int) error {
+	mem := struct {
+		RamSize int `json:"ram_size"`
+	}{
+		RamSize: mem_size,
+	}
+	reqres, err := json.Marshal(mem)
+	if err != nil {
+		return err
+	}
+	_, err = c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%d/hotplugmem/", id), "PUT", *bytes.NewBuffer(reqres), 201)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Client) UpdateVCPUHotplug(id int, num_vcpu int) error {
+	vcpu := struct {
+		NumCPU int `json:"num_cores"`
+	}{
+		NumCPU: num_vcpu,
+	}
+	reqres, err := json.Marshal(vcpu)
+	if err != nil {
+		return err
+	}
+	_, err = c.httpRequest(fmt.Sprintf("dashboard/acpi/vm/%d/hotplugvcpu/", id), "PUT", *bytes.NewBuffer(reqres), 201)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (c *Client) UpdateVMLease(id int, lease_new int) error {
 	lease := struct {
 		Lease int `json:"lease"`

@@ -1,0 +1,11 @@
+version: 2
+ethernets:
+  ens3:
+    match:
+      macaddress: '{{ net.mac }}'
+    addresses: 
+      - {{ net.ipv4 }}/{{ net.mask4 }}
+    gateway4: {{ net.gateway4 }}
+    nameservers:
+      addresses:
+        - 8.8.8.8

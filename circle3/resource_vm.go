@@ -169,31 +169,30 @@ func resourceVMUpdate(ctx context.Context, d *schema.ResourceData, m interface{}
 		}
 	}
 
-	if d.HasChange("num_cores") || d.HasChange("ram_size") {
-		if d.HasChange("max_ram_size") || d.HasChange("priority") || d.HasChange("num_cores_max") {
-			if d.Get("state") != "RUNNING" {
-				tflog.Info(ctx, "Update vm resources")
-				update := circleclient.VMResource{
-					MaxRamSize:  d.Get("max_ram_size").(int),
-					RamSize:     d.Get("ram_size").(int),
-					NumCores:    d.Get("num_cores").(int),
-					Priority:    d.Get("priority").(int),
-					NumCoresMax: d.Get("num_cores_max").(int),
-				}
-				c.UpdateVMResource(vmid, update)
-			} else {
-				return diag.FromErr(errors.New("VM state is incorrect for change resources"))
-			}
-		} else {
-			tflog.Info(ctx, "Update vm resources")
+	if d.Get("status").(string) != "RUNNING" {
+		if d.HasChange("max_ram_size") || d.HasChange("priority") ||
+			d.HasChange("num_cores_max") || d.HasChange("num_cores") || d.HasChange("ram_size") {
+			tflog.Info(ctx, "Update vm static resources")
 			update := circleclient.VMResource{
 				MaxRamSize:  d.Get("max_ram_size").(int),
-				NumCoresMax: d.Get("num_cores_max").(int),
 				RamSize:     d.Get("ram_size").(int),
 				NumCores:    d.Get("num_cores").(int),
 				Priority:    d.Get("priority").(int),
+				NumCoresMax: d.Get("num_cores_max").(int),
 			}
 			c.UpdateVMResource(vmid, update)
+		}
+	} else {
+		if d.HasChange("num_cores") {
+			tflog.Info(ctx, "Update vm hotplug num_cores")
+			c.UpdateVCPUHotplug(vmid, d.Get("num_cores").(int))
+		}
+		if d.HasChange("ram_size") {
+			tflog.Info(ctx, "Update vm hotplug ram_size")
+			c.UpdateMemHotplug(vmid, d.Get("ram_size").(int))
+		}
+		if d.HasChange("max_ram_size") || d.HasChange("priority") || d.HasChange("num_cores_max") {
+			return diag.FromErr(errors.New("VM state is incorrect for change resources"))
 		}
 	}
 
