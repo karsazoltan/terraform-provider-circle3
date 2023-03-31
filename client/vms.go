@@ -13,16 +13,9 @@ func (c *Client) DeleteVM(id int) error {
 }
 
 func (c *Client) DeleteLBVM(id int, datacenter string) error {
-	req := struct {
-		DataCenter string `json:"datacenter"`
-	}{
-		DataCenter: datacenter,
-	}
-	reqres, err := json.Marshal(req)
-	if err != nil {
-		return err
-	}
-	_, err = c.httpRequest(fmt.Sprintf("lb/dashboard/acpi/vm/%v/", id), "DELETE", *bytes.NewBuffer(reqres), 204)
+	q := url.Values{}
+	q.Add("datacenter", datacenter)
+	_, err := c.httpRequest(fmt.Sprintf("lb/dashboard/acpi/vm/%v/?%s", id, q.Encode()), "DELETE", bytes.Buffer{}, 204)
 	return err
 }
 

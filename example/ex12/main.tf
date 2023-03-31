@@ -19,3 +19,8 @@ resource "circle3_lbvm" "demo" {
   username = "admin"
 }
 
+resource "circle3_lbvm" "demo2" {
+  name = "loadbalancing2"
+  from_template = "ubuntu"
+  username = "admin"
+}
