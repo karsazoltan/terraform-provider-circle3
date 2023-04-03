@@ -1,0 +1,131 @@
+# circle3_lbvm.demo:
+resource "circle3_lbvm" "demo" {
+    arch              = "x86_64"
+    balancer_method   = "rr"
+    ci_meta_data      = <<-EOT
+        instance-id: {{ hostname }} 
+        local-hostname: {{ hostname }} 
+        cloud-name: circle3
+        platform: circle3
+    EOT
+    ci_network_config = <<-EOT
+        version: 2
+        ethernets:
+          ens3:
+            match:
+              macaddress: '{{ net.mac }}'
+            addresses: 
+              - {{ net.ipv4 }}/{{ net.mask4 }}
+            gateway4: {{ net.gateway4 }}
+            nameservers:
+              addresses:
+                - 8.8.8.8
+    EOT
+    ci_user_data      = <<-EOT
+        #cloud-config
+        
+        ssh_pwauth: 1
+        
+        users:
+          - name: {{ sysuser }} 
+            sudo: ['ALL=(ALL) NOPASSWD:ALL']
+            groups: sudo
+            shell: /bin/bash
+            chpasswd: { expire: False }
+            lock-passwd: false
+        chpasswd:
+            list: |
+                {{ sysuser }}:{{ password }}
+            expire: False
+    EOT
+    cloud_init        = true
+    datacenter        = "https://kappa1.fured.cloud.bme.hu"
+    disks             = [
+        23,
+    ]
+    from_template     = "ubuntu"
+    has_agent         = false
+    hostipv4          = "152.66.54.74"
+    id                = "13"
+    ipv4              = "192.168.2.27"
+    ipv6              = "None"
+    max_ram_size      = 512
+    name              = "loadbalancing"
+    num_cores         = 1
+    num_cores_max     = 1
+    priority          = 30
+    pw                = "vo1hwMFrXU"
+    ram_size          = 512
+    sshportipv4       = 19903
+    system            = "ubuntu"
+    username          = "admin"
+    vlans             = [
+        3,
+    ]
+}
+
+# circle3_lbvm.demo2:
+resource "circle3_lbvm" "demo2" {
+    arch              = "x86_64"
+    balancer_method   = "rr"
+    ci_meta_data      = <<-EOT
+        instance-id: {{ hostname }} 
+        local-hostname: {{ hostname }} 
+        cloud-name: circle3
+        platform: circle3
+    EOT
+    ci_network_config = <<-EOT
+        version: 2
+        ethernets:
+          ens3:
+            match:
+              macaddress: '{{ net.mac }}'
+            addresses: 
+              - {{ net.ipv4 }}/{{ net.mask4 }}
+            gateway4: {{ net.gateway4 }}
+            nameservers:
+              addresses:
+                - 8.8.8.8
+    EOT
+    ci_user_data      = <<-EOT
+        #cloud-config
+        
+        ssh_pwauth: 1
+        
+        users:
+          - name: {{ sysuser }} 
+            sudo: ['ALL=(ALL) NOPASSWD:ALL']
+            groups: sudo
+            shell: /bin/bash
+            chpasswd: { expire: False }
+            lock-passwd: false
+        chpasswd:
+            list: |
+                {{ sysuser }}:{{ password }}
+            expire: False
+    EOT
+    cloud_init        = true
+    datacenter        = "https://kappa2.fured.cloud.bme.hu"
+    disks             = [
+        12,
+    ]
+    from_template     = "ubuntu"
+    has_agent         = false
+    hostipv4          = "152.66.54.69"
+    id                = "7"
+    ipv4              = "192.168.2.27"
+    ipv6              = "None"
+    max_ram_size      = 512
+    name              = "loadbalancing2"
+    num_cores         = 4
+    num_cores_max     = 1
+    priority          = 30
+    pw                = "KOqrQsTQmh"
+    ram_size          = 512
+    sshportipv4       = 9776
+    system            = "ubuntu"
+    username          = "admin"
+    vlans             = [
+        3,
+    ]
+}
