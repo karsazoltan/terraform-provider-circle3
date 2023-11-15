@@ -186,6 +186,27 @@ func (c *Client) CreateVMfromTemplate(template_id int, name string) (*VM, error)
 	return &retvm[0], nil
 }
 
+func (c *Client) CreateVMfromRP(rpname string, key string) (*VM, error) {
+	rp := struct {
+		RPName string `json:"rpname"`
+		Key    string `json:"key"`
+	}{RPName: rpname, Key: key}
+	req, err := json.Marshal(rp)
+	if err != nil {
+		return nil, err
+	}
+	body, err := c.httpRequest("rp/", "POST", *bytes.NewBuffer(req), 201)
+	if err != nil {
+		return nil, err
+	}
+	retvm := []VM{}
+	err = json.NewDecoder(body).Decode(&retvm)
+	if err != nil {
+		return nil, err
+	}
+	return &retvm[0], nil
+}
+
 func (c *Client) CreateVMfromTemplateforUsers(template_id int, name string, users []int) ([]VM, error) {
 	template := struct {
 		TemplateID int    `json:"template"`

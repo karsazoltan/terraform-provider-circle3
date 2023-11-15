@@ -19,9 +19,21 @@ func dataSourceGroup() *schema.Resource {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"name": {
+			"rpname": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
+			},
+			"from_template": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"num_vms": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"key": {
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"users": {
 				Type: schema.TypeList,
@@ -38,9 +50,9 @@ func dataSourceGroupRead(ctx context.Context, d *schema.ResourceData, m interfac
 	c := m.(*circleclient.Client)
 	var diags diag.Diagnostics
 
-	if _, ok := d.GetOk("name"); ok {
+	if _, ok := d.GetOk("rpname"); ok {
 		tflog.Info(ctx, "Get group by name")
-		group, err := c.GetGroupByName(d.Get("name").(string))
+		group, err := c.GetGroupByName(d.Get("rpname").(string))
 		if err != nil {
 			return diag.FromErr(err)
 		}
@@ -58,7 +70,7 @@ func dataSourceGroupRead(ctx context.Context, d *schema.ResourceData, m interfac
 			return diag.FromErr(err)
 		}
 		d.SetId(strconv.Itoa(group.ID))
-		d.Set("name", group.Name)
+		d.Set("rpname", group.Name)
 		d.Set("users", group.UserSet)
 	} else {
 		diags = append(diags, diag.Diagnostic{

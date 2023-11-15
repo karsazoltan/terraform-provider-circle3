@@ -61,6 +61,7 @@ func Provider() *schema.Provider {
 			"circle3_port":     resourcePort(),
 			"circle3_variable": resourceVariable(),
 			"circle3_lbvm":     resourceLBVM(),
+			"circle3_lbrp":     resource_resourceGroups(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"circle3_leases":   dataSourceLeases(),

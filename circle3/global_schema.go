@@ -534,3 +534,36 @@ func variableSchema() map[string]*schema.Schema {
 		},
 	}
 }
+
+func rpSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"id": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"from_template": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"rpname": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"num_vms": {
+			Type:     schema.TypeInt,
+			Optional: true,
+		},
+		"manual": {
+			Type: schema.TypeMap,
+			Elem: &schema.Schema{
+				Type: schema.TypeInt,
+			},
+			Optional: true,
+		},
+		"key": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Default:  "",
+		},
+	}
+}

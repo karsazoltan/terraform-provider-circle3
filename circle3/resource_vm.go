@@ -29,8 +29,26 @@ func resourceVM() *schema.Resource {
 func resourceVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	if _, ok := d.GetOk("from_template"); ok {
 		return resourceVMfromTemplateCreate(ctx, d, m)
+	} else if _, ok := d.GetOk("from_rp"); ok {
+		return resourceVMfromRP(ctx, d, m)
 	}
 	return resourceBaseVMCreate(ctx, d, m)
+}
+
+func resourceVMfromRP(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	c := m.(*circleclient.Client)
+	tflog.Info(ctx, "Create vm from RP")
+	if key, ok := d.GetOk("key"); ok {
+		rpname := d.Get("from_rp").(string)
+		newvm, err := c.CreateVMfromRP(rpname, key.(string))
+		if err != nil {
+			return diag.FromErr(err)
+		}
+		d.SetId(strconv.Itoa(newvm.ID))
+		return resourceVMRead(ctx, d, m)
+	}
+	var diags diag.Diagnostics
+	return diags
 }
 
 func resourceBaseVMCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

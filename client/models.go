@@ -280,3 +280,11 @@ type Variable struct {
 	URL   string `json:"url"`
 	Value string `json:"value"`
 }
+
+type RP struct {
+	ID           string `json:"id"`
+	RPName       string `json:"rpname"`
+	FromTemplate string `json:"from_template"`
+	NumVMs       int    `json:"num_vms"`
+	Key          string `json:"key"`
+}
